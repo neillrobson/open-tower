@@ -1,0 +1,12 @@
+{
+    "indentation": {
+        "character": "    "
+    },
+    "whitespace": {
+        "parenConfig": {
+            "anonFuncParamParens": {
+                "openingPolicy": "before"
+            }
+        }
+    }
+}

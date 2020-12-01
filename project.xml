@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+    <meta title="OpenTower" package="com.neillrobson.opentower" version="1.0.0" company="Neill Robson" />
+    <app main="Main" path="Export" file="OpenTower" />
+
+    <source path="Source" />
+
+    <haxelib name="openfl" />
+
+    <assets path="Assets" rename="assets" />
+
+</project>
