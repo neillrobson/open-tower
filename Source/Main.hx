@@ -7,31 +7,34 @@ import openfl.Assets;
 import openfl.display.Sprite;
 
 class Main extends Sprite {
-    var circle:Sprite;
+    var bSprite:Sprite;
 
     public function new() {
         super();
-        var bitmapData = Assets.getBitmapData('assets/openfl.png');
+
+        var width = stage.stageWidth;
+        var height = stage.stageHeight;
+
+        graphics.beginFill(0x4379B7);
+        graphics.drawRect(0, 0, width, height);
+        graphics.endFill();
+
+        var bitmapData = Assets.getBitmapData('assets/logo.png');
         var bitmap = new Bitmap(bitmapData);
-        addChild(bitmap);
-
-        circle = new Sprite();
-        circle.graphics.beginFill(0x990000);
-        circle.graphics.drawCircle(50, 50, 50);
-        circle.graphics.endFill();
-        circle.addEventListener(MouseEvent.CLICK, startAnimation);
-
-        addChild(circle);
+        bSprite = new Sprite();
+        bSprite.addChild(bitmap);
+        bSprite.addEventListener(MouseEvent.CLICK, startAnimation);
+        addChild(bSprite);
     }
 
-    function fadeCircle(event) {
-        circle.alpha -= 0.05;
-        if (circle.alpha <= 0) {
-            circle.removeEventListener(Event.ENTER_FRAME, fadeCircle);
+    function fadeBitmap(event) {
+        bSprite.alpha -= 0.05;
+        if (bSprite.alpha <= 0) {
+            bSprite.removeEventListener(Event.ENTER_FRAME, fadeBitmap);
         }
     }
 
     function startAnimation(event) {
-        circle.addEventListener(Event.ENTER_FRAME, fadeCircle);
+        bSprite.addEventListener(Event.ENTER_FRAME, fadeBitmap);
     }
 }
