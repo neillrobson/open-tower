@@ -1,8 +1,5 @@
 package;
 
-import openfl.geom.Matrix;
-import openfl.Assets;
-import openfl.display.Bitmap;
 import haxe.Timer;
 import openfl.events.Event;
 import openfl.display.Sprite;
@@ -16,10 +13,6 @@ class Main extends Sprite {
 
     var tickCount = 0;
     var frames = 0;
-
-    var island:Bitmap;
-    var islandRotation = 0.0;
-    var islandRotationSpeed = 0.0;
 
     var game:Game;
 
@@ -39,20 +32,16 @@ class Main extends Sprite {
         game = new Game();
         addChild(game);
 
-        var islandBitmapData = Assets.getBitmapData('assets/island.png');
-        island = new Bitmap(islandBitmapData);
-        // addChild(island);
-
         onResize(null);
     }
 
     function onResize(event) {
         game.scaleX = game.scaleY = 1;
-        var newScaleX:Float = stage.stageWidth / game.width;
-        var newScaleY:Float = stage.stageHeight / game.height;
+        var newScaleX:Float = stage.stageWidth / Game.WIDTH;
+        var newScaleY:Float = stage.stageHeight / Game.HEIGHT;
         game.scaleX = game.scaleY = Math.min(newScaleX, newScaleY);
-        game.x = (stage.stageWidth - game.width) / 2;
-        game.y = (stage.stageHeight - game.height) / 2;
+        game.x = (stage.stageWidth - Game.WIDTH * game.scaleX) / 2;
+        game.y = (stage.stageHeight - Game.HEIGHT * game.scaleY) / 2;
     }
 
     function onEnterFrame(event) {
@@ -82,13 +71,6 @@ class Main extends Sprite {
     function update() {
         ++tickCount;
 
-        islandRotation += islandRotationSpeed;
-        islandRotationSpeed *= 0.7;
-
-        if (true) {
-            islandRotationSpeed += 0.002;
-        }
-
         game.update();
 
         if (tickCount % TICKS_PER_SECOND == 0) {
@@ -101,12 +83,5 @@ class Main extends Sprite {
         ++frames;
 
         game.render();
-
-        var islandTransformMatrix = new Matrix();
-        islandTransformMatrix.translate(-island.bitmapData.width / 2, -island.bitmapData.height / 2);
-        islandTransformMatrix.rotate(islandRotation);
-        islandTransformMatrix.scale(1.5, 0.75);
-        islandTransformMatrix.translate(width / 2, height / 2);
-        island.transform.matrix = islandTransformMatrix;
     }
 }
