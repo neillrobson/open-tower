@@ -1,5 +1,8 @@
 package;
 
+import openfl.text.TextFormat;
+import openfl.text.TextField;
+import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 import openfl.Assets;
 import openfl.display.Bitmap;
@@ -16,15 +19,19 @@ class Game extends Sprite implements GameObject {
     var islandRotation = 0.0;
     var islandRotationSpeed = 0.0;
 
+    var mouseStageX = -1.0;
+    var mouseStageY = 0.0;
+    var mousePos:TextField;
+
     public function new() {
         super();
         init();
     }
 
     function init() {
-        graphics.clear();
+        addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 
-        // Main game area
+        graphics.clear();
         graphics.beginFill(0x4379B7);
         graphics.drawRect(0, 0, WIDTH, HEIGHT);
         graphics.endFill();
@@ -35,6 +42,14 @@ class Game extends Sprite implements GameObject {
         var islandBitmapData = Assets.getBitmapData('assets/island.png');
         island = new Bitmap(islandBitmapData);
         addChild(island);
+
+        mousePos = new TextField();
+        mousePos.x = 200;
+        mousePos.y = 4;
+        mousePos.width = 200;
+        mousePos.defaultTextFormat = new TextFormat(null, 20, 0xFFFFFF, true);
+        mousePos.selectable = false;
+        addChild(mousePos);
     }
 
     public function update() {
@@ -43,8 +58,15 @@ class Game extends Sprite implements GameObject {
         islandRotation += islandRotationSpeed;
         islandRotationSpeed *= 0.7;
 
-        if (true) {
-            islandRotationSpeed += 0.002;
+        // if (true) {
+        //     islandRotationSpeed += 0.002;
+        // }
+
+        if (mouseStageX >= 0 && mouseStageY < stage.stageHeight && mouseStageY > 0) {
+            if (mouseStageX < 80)
+                islandRotationSpeed -= 0.02;
+            if (mouseStageX > stage.stageWidth - 80)
+                islandRotationSpeed += 0.02;
         }
     }
 
@@ -57,5 +79,12 @@ class Game extends Sprite implements GameObject {
         islandTransformMatrix.scale(1.5, 0.75);
         islandTransformMatrix.translate(WIDTH / 2, HEIGHT * 43 / 70);
         island.transform.matrix = islandTransformMatrix;
+
+        mousePos.text = 'X: $mouseStageX Y: $mouseStageY';
+    }
+
+    function onMouseMove(event:MouseEvent) {
+        mouseStageX = event.stageX;
+        mouseStageY = event.stageY;
     }
 }
