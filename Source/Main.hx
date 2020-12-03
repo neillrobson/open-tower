@@ -1,5 +1,8 @@
 package;
 
+import openfl.geom.Matrix;
+import openfl.Assets;
+import openfl.display.Bitmap;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import haxe.Timer;
@@ -16,6 +19,10 @@ class Main extends Sprite {
     var gameTime = 0;
     var timeText:TextField;
 
+    var island:Bitmap;
+    var islandRotation = 0.0;
+    var islandRotationSpeed = 0.0;
+
     public function new() {
         super();
         addEventListener(Event.ADDED_TO_STAGE, added);
@@ -28,6 +35,10 @@ class Main extends Sprite {
     }
 
     function init() {
+        var islandBitmapData = Assets.getBitmapData('assets/island.png');
+        island = new Bitmap(islandBitmapData);
+        addChild(island);
+
         timeText = new TextField();
         timeText.x = 4;
         timeText.y = 4;
@@ -63,6 +74,13 @@ class Main extends Sprite {
 
     function update() {
         ++gameTime;
+
+        islandRotation += islandRotationSpeed;
+        islandRotationSpeed *= 0.7;
+
+        if (true) {
+            islandRotationSpeed += 0.002;
+        }
     }
 
     function render() {
@@ -83,6 +101,13 @@ class Main extends Sprite {
         graphics.beginFill(0x87ADFF);
         graphics.drawRect(0, 0, stage.stageWidth, 40);
         graphics.endFill();
+
+        var islandTransformMatrix = new Matrix();
+        islandTransformMatrix.translate(-island.bitmapData.width / 2, -island.bitmapData.height / 2);
+        islandTransformMatrix.rotate(islandRotation);
+        islandTransformMatrix.scale(1.5, 0.75);
+        islandTransformMatrix.translate(stage.stageWidth / 2, stage.stageHeight / 2);
+        island.transform.matrix = islandTransformMatrix;
 
         timeText.text = timeString;
     }
