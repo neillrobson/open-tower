@@ -17,6 +17,8 @@ class Main extends Sprite {
     var lastTime = -1.0;
 
     var gameTime = 0;
+    var tickCount = 0;
+    var frames = 0;
     var timeText:TextField;
 
     var island:Bitmap;
@@ -25,16 +27,19 @@ class Main extends Sprite {
 
     public function new() {
         super();
-        addEventListener(Event.ADDED_TO_STAGE, added);
+        addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
-    function added(event) {
-        removeEventListener(Event.ADDED_TO_STAGE, added);
+    function onAddedToStage(event) {
+        removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         init();
+        addEventListener(Event.RESIZE, onResize);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
     }
 
     function init() {
+        onResize(null);
+
         var islandBitmapData = Assets.getBitmapData('assets/island.png');
         island = new Bitmap(islandBitmapData);
         addChild(island);
@@ -46,6 +51,16 @@ class Main extends Sprite {
         timeText.defaultTextFormat = new TextFormat(null, 20, 0xFFFFFF, true);
         timeText.selectable = false;
         addChild(timeText);
+    }
+
+    function onResize(event) {
+        graphics.beginFill(0x4379B7);
+        graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+        graphics.endFill();
+
+        graphics.beginFill(0x87ADFF);
+        graphics.drawRect(0, 0, stage.stageWidth, 40);
+        graphics.endFill();
     }
 
     function onEnterFrame(event) {
@@ -73,6 +88,7 @@ class Main extends Sprite {
     }
 
     function update() {
+        ++tickCount;
         ++gameTime;
 
         islandRotation += islandRotationSpeed;
@@ -81,9 +97,16 @@ class Main extends Sprite {
         if (true) {
             islandRotationSpeed += 0.002;
         }
+
+        if (tickCount % TICKS_PER_SECOND == 0) {
+            trace('$frames fps');
+            frames = 0;
+        }
     }
 
     function render() {
+        ++frames;
+
         var seconds = Std.int(gameTime * SECONDS_PER_TICK);
         var minutes = Std.int(seconds / 60);
         var hours = Std.int(minutes / 60);
@@ -93,14 +116,6 @@ class Main extends Sprite {
         var timeString = 'Time: ${hours > 0 ? hours + ":" : ""}';
         timeString += '${minutes < 10 ? "0" : ""}${minutes}:';
         timeString += '${seconds < 10 ? "0" : ""}${seconds}';
-
-        graphics.beginFill(0x4379B7);
-        graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-        graphics.endFill();
-
-        graphics.beginFill(0x87ADFF);
-        graphics.drawRect(0, 0, stage.stageWidth, 40);
-        graphics.endFill();
 
         var islandTransformMatrix = new Matrix();
         islandTransformMatrix.translate(-island.bitmapData.width / 2, -island.bitmapData.height / 2);
