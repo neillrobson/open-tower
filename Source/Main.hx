@@ -10,6 +10,11 @@ import openfl.events.Event;
 import openfl.display.Sprite;
 
 class Main extends Sprite {
+    static final WIDTH = 512;
+    static final HEIGHT = 320;
+    static final TOOLBAR_HEIGHT = 40;
+    static final GAME_AREA_HEIGHT = HEIGHT - TOOLBAR_HEIGHT;
+
     static final TICKS_PER_SECOND = 30;
     static final MAX_TICKS_PER_FRAME = 10;
     static final SECONDS_PER_TICK = 1 / TICKS_PER_SECOND;
@@ -25,6 +30,9 @@ class Main extends Sprite {
     var islandRotation = 0.0;
     var islandRotationSpeed = 0.0;
 
+    var toolbar:Sprite;
+    var gameArea:Sprite;
+
     public function new() {
         super();
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -33,16 +41,20 @@ class Main extends Sprite {
     function onAddedToStage(event) {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         init();
-        addEventListener(Event.RESIZE, onResize);
+        stage.addEventListener(Event.RESIZE, onResize);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
     }
 
     function init() {
-        onResize(null);
+        toolbar = new Sprite();
+        addChild(toolbar);
+
+        gameArea = new Sprite();
+        addChild(gameArea);
 
         var islandBitmapData = Assets.getBitmapData('assets/island.png');
         island = new Bitmap(islandBitmapData);
-        addChild(island);
+        // addChild(island);
 
         timeText = new TextField();
         timeText.x = 4;
@@ -50,17 +62,28 @@ class Main extends Sprite {
         timeText.width = 400;
         timeText.defaultTextFormat = new TextFormat(null, 20, 0xFFFFFF, true);
         timeText.selectable = false;
-        addChild(timeText);
+        // addChild(timeText);
+
+        onResize(null);
     }
 
     function onResize(event) {
-        graphics.beginFill(0x4379B7);
-        graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-        graphics.endFill();
+        toolbar.graphics.clear();
+        toolbar.graphics.lineStyle(2);
+        toolbar.graphics.beginFill(0x87ADFF);
+        toolbar.graphics.drawRect(0, 0, stage.stageWidth, TOOLBAR_HEIGHT);
+        toolbar.graphics.endFill();
 
-        graphics.beginFill(0x87ADFF);
-        graphics.drawRect(0, 0, stage.stageWidth, 40);
-        graphics.endFill();
+        gameArea.graphics.clear();
+        var newScaleX:Float = stage.stageWidth / WIDTH;
+        var newScaleY:Float = (stage.stageHeight - TOOLBAR_HEIGHT) / GAME_AREA_HEIGHT;
+        var newScale = Math.min(newScaleX, newScaleY);
+        gameArea.graphics.lineStyle(2);
+        gameArea.graphics.beginFill(0x4379B7);
+        gameArea.graphics.drawRect(0, 0, WIDTH * newScale, GAME_AREA_HEIGHT * newScale);
+        gameArea.graphics.endFill();
+        gameArea.x = (stage.stageWidth - WIDTH * newScale) / 2;
+        gameArea.y = TOOLBAR_HEIGHT + (stage.stageHeight - TOOLBAR_HEIGHT - GAME_AREA_HEIGHT * newScale) / 2;
     }
 
     function onEnterFrame(event) {
@@ -121,7 +144,7 @@ class Main extends Sprite {
         islandTransformMatrix.translate(-island.bitmapData.width / 2, -island.bitmapData.height / 2);
         islandTransformMatrix.rotate(islandRotation);
         islandTransformMatrix.scale(1.5, 0.75);
-        islandTransformMatrix.translate(stage.stageWidth / 2, stage.stageHeight / 2);
+        islandTransformMatrix.translate(width / 2, height / 2);
         island.transform.matrix = islandTransformMatrix;
 
         timeText.text = timeString;
