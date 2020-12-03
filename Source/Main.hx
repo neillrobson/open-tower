@@ -10,11 +10,6 @@ import openfl.events.Event;
 import openfl.display.Sprite;
 
 class Main extends Sprite {
-    static final WIDTH = 512;
-    static final HEIGHT = 320;
-    static final TOOLBAR_HEIGHT = 40;
-    static final GAME_AREA_HEIGHT = HEIGHT - TOOLBAR_HEIGHT;
-
     static final TICKS_PER_SECOND = 30;
     static final MAX_TICKS_PER_FRAME = 10;
     static final SECONDS_PER_TICK = 1 / TICKS_PER_SECOND;
@@ -30,8 +25,7 @@ class Main extends Sprite {
     var islandRotation = 0.0;
     var islandRotationSpeed = 0.0;
 
-    var toolbar:Sprite;
-    var gameArea:Sprite;
+    var game:Game;
 
     public function new() {
         super();
@@ -46,11 +40,8 @@ class Main extends Sprite {
     }
 
     function init() {
-        toolbar = new Sprite();
-        addChild(toolbar);
-
-        gameArea = new Sprite();
-        addChild(gameArea);
+        game = new Game();
+        addChild(game);
 
         var islandBitmapData = Assets.getBitmapData('assets/island.png');
         island = new Bitmap(islandBitmapData);
@@ -68,22 +59,12 @@ class Main extends Sprite {
     }
 
     function onResize(event) {
-        toolbar.graphics.clear();
-        toolbar.graphics.lineStyle(2);
-        toolbar.graphics.beginFill(0x87ADFF);
-        toolbar.graphics.drawRect(0, 0, stage.stageWidth, TOOLBAR_HEIGHT);
-        toolbar.graphics.endFill();
-
-        gameArea.graphics.clear();
-        var newScaleX:Float = stage.stageWidth / WIDTH;
-        var newScaleY:Float = (stage.stageHeight - TOOLBAR_HEIGHT) / GAME_AREA_HEIGHT;
-        var newScale = Math.min(newScaleX, newScaleY);
-        gameArea.graphics.lineStyle(2);
-        gameArea.graphics.beginFill(0x4379B7);
-        gameArea.graphics.drawRect(0, 0, WIDTH * newScale, GAME_AREA_HEIGHT * newScale);
-        gameArea.graphics.endFill();
-        gameArea.x = (stage.stageWidth - WIDTH * newScale) / 2;
-        gameArea.y = TOOLBAR_HEIGHT + (stage.stageHeight - TOOLBAR_HEIGHT - GAME_AREA_HEIGHT * newScale) / 2;
+        game.scaleX = game.scaleY = 1;
+        var newScaleX:Float = stage.stageWidth / game.width;
+        var newScaleY:Float = stage.stageHeight / game.height;
+        game.scaleX = game.scaleY = Math.min(newScaleX, newScaleY);
+        game.x = (stage.stageWidth - game.width) / 2;
+        game.y = (stage.stageHeight - game.height) / 2;
     }
 
     function onEnterFrame(event) {
