@@ -3,10 +3,7 @@ package;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import haxe.Timer;
-import openfl.events.MouseEvent;
 import openfl.events.Event;
-import openfl.display.Bitmap;
-import openfl.Assets;
 import openfl.display.Sprite;
 
 class Main extends Sprite {
@@ -17,27 +14,25 @@ class Main extends Sprite {
     var lastTime = -1.0;
 
     var gameTime = 0;
-    var bSprite:Sprite;
     var timeText:TextField;
 
     public function new() {
         super();
+        addEventListener(Event.ADDED_TO_STAGE, added);
+    }
+
+    function added(event) {
+        removeEventListener(Event.ADDED_TO_STAGE, added);
         init();
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
     }
 
     function init() {
-        var bitmapData = Assets.getBitmapData('assets/logo.png');
-        var bitmap = new Bitmap(bitmapData);
-        bSprite = new Sprite();
-        bSprite.addChild(bitmap);
-        bSprite.addEventListener(MouseEvent.CLICK, startAnimation);
-        addChild(bSprite);
-
         timeText = new TextField();
-        timeText.x = 300;
-        timeText.y = 300;
-        timeText.defaultTextFormat = new TextFormat("Verdana", 24, 0x000000, true);
+        timeText.x = 4;
+        timeText.y = 4;
+        timeText.width = 400;
+        timeText.defaultTextFormat = new TextFormat(null, 20, 0xFFFFFF, true);
         timeText.selectable = false;
         addChild(timeText);
     }
@@ -77,7 +72,7 @@ class Main extends Sprite {
         seconds %= 60;
         minutes %= 60;
 
-        var timeString = '${hours > 0 ? hours + ":" : ""}';
+        var timeString = 'Time: ${hours > 0 ? hours + ":" : ""}';
         timeString += '${minutes < 10 ? "0" : ""}${minutes}:';
         timeString += '${seconds < 10 ? "0" : ""}${seconds}';
 
@@ -85,17 +80,10 @@ class Main extends Sprite {
         graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
         graphics.endFill();
 
+        graphics.beginFill(0x87ADFF);
+        graphics.drawRect(0, 0, stage.stageWidth, 40);
+        graphics.endFill();
+
         timeText.text = timeString;
-    }
-
-    function fadeBitmap(event) {
-        bSprite.alpha -= 0.05;
-        if (bSprite.alpha <= 0) {
-            bSprite.removeEventListener(Event.ENTER_FRAME, fadeBitmap);
-        }
-    }
-
-    function startAnimation(event) {
-        bSprite.addEventListener(Event.ENTER_FRAME, fadeBitmap);
     }
 }
