@@ -14,7 +14,15 @@
 				"kind": "test",
 				"isDefault": true
 			},
-			"label": "lime: test (active configuration)"
+			"label": "lime: test (active configuration)",
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			}
 		}
 	]
 }
