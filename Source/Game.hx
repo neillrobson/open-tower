@@ -1,7 +1,5 @@
 package;
 
-import openfl.text.TextFormat;
-import openfl.text.TextField;
 import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 import openfl.Assets;
@@ -13,15 +11,13 @@ class Game extends Sprite implements GameObject {
     public static final HEIGHT = 320;
     public static final TOOLBAR_HEIGHT = 40;
 
+    var isMouseOver = false;
+
     var toolbar:Toolbar;
 
     var island:Bitmap;
     var islandRotation = 0.0;
     var islandRotationSpeed = 0.0;
-
-    var mouseStageX = -1.0;
-    var mouseStageY = 0.0;
-    var mousePos:TextField;
 
     public function new() {
         super();
@@ -29,7 +25,8 @@ class Game extends Sprite implements GameObject {
     }
 
     function init() {
-        addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+        addEventListener(MouseEvent.ROLL_OVER, onRollOver);
+        addEventListener(MouseEvent.ROLL_OUT, onRollOut);
 
         graphics.clear();
         graphics.beginFill(0x4379B7);
@@ -42,14 +39,6 @@ class Game extends Sprite implements GameObject {
         var islandBitmapData = Assets.getBitmapData('assets/island.png');
         island = new Bitmap(islandBitmapData);
         addChild(island);
-
-        mousePos = new TextField();
-        mousePos.x = 200;
-        mousePos.y = 4;
-        mousePos.width = 200;
-        mousePos.defaultTextFormat = new TextFormat(null, 20, 0xFFFFFF, true);
-        mousePos.selectable = false;
-        addChild(mousePos);
     }
 
     public function update() {
@@ -62,10 +51,10 @@ class Game extends Sprite implements GameObject {
         //     islandRotationSpeed += 0.002;
         // }
 
-        if (mouseStageX >= 0 && mouseStageY < stage.stageHeight && mouseStageY > 0) {
-            if (mouseStageX < 80)
+        if (isMouseOver && mouseY > TOOLBAR_HEIGHT) {
+            if (mouseX < 80)
                 islandRotationSpeed -= 0.02;
-            if (mouseStageX > stage.stageWidth - 80)
+            if (mouseX > WIDTH - 80)
                 islandRotationSpeed += 0.02;
         }
     }
@@ -79,12 +68,13 @@ class Game extends Sprite implements GameObject {
         islandTransformMatrix.scale(1.5, 0.75);
         islandTransformMatrix.translate(WIDTH / 2, HEIGHT * 43 / 70);
         island.transform.matrix = islandTransformMatrix;
-
-        mousePos.text = 'X: $mouseStageX Y: $mouseStageY';
     }
 
-    function onMouseMove(event:MouseEvent) {
-        mouseStageX = event.stageX;
-        mouseStageY = event.stageY;
+    function onRollOut(event) {
+        isMouseOver = false;
+    }
+
+    function onRollOver(event) {
+        isMouseOver = true;
     }
 }
