@@ -1,5 +1,7 @@
 package;
 
+import openfl.display.Tile;
+import openfl.display.Tilemap;
 import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 import openfl.Assets;
@@ -12,6 +14,11 @@ class Game extends Sprite implements GameObject {
     public static final TOOLBAR_HEIGHT = 40;
 
     var isMouseOver = false;
+
+    var spriteSheet:SpriteSheet;
+    var entityDisplayLayer:Tilemap;
+
+    var trees:Array<Tree> = new Array();
 
     var toolbar:Toolbar;
 
@@ -39,6 +46,15 @@ class Game extends Sprite implements GameObject {
         var islandBitmapData = Assets.getBitmapData('assets/island.png');
         island = new Bitmap(islandBitmapData);
         addChild(island);
+
+        spriteSheet = new SpriteSheet();
+        entityDisplayLayer = new Tilemap(WIDTH, HEIGHT, spriteSheet.tileset, false);
+        addChild(entityDisplayLayer);
+
+        var tree = new Tree(100, 100);
+        tree.init(spriteSheet);
+        entityDisplayLayer.addTile(tree.tile);
+        trees.push(tree);
     }
 
     public function update() {
@@ -62,12 +78,19 @@ class Game extends Sprite implements GameObject {
     public function render() {
         toolbar.render();
 
+        var coordinateTransform = new Matrix();
+        coordinateTransform.rotate(islandRotation);
+        coordinateTransform.scale(1.5, 0.75);
+        coordinateTransform.translate(WIDTH / 2, HEIGHT * 43 / 70);
+
         var islandTransformMatrix = new Matrix();
         islandTransformMatrix.translate(-island.bitmapData.width / 2, -island.bitmapData.height / 2);
-        islandTransformMatrix.rotate(islandRotation);
-        islandTransformMatrix.scale(1.5, 0.75);
-        islandTransformMatrix.translate(WIDTH / 2, HEIGHT * 43 / 70);
+        islandTransformMatrix.concat(coordinateTransform);
         island.transform.matrix = islandTransformMatrix;
+
+        for (tree in trees) {
+            tree.updatePos(coordinateTransform);
+        }
     }
 
     function onRollOut(event) {
