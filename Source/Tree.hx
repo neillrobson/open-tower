@@ -5,8 +5,9 @@ import openfl.geom.Matrix;
 import openfl.display.Tile;
 
 class Tree {
-    var x:Float;
-    var y:Float;
+    public var x:Float;
+    public var y:Float;
+    public var r:Float = 4.0;
 
     public var tile:Tile;
 

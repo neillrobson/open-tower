@@ -12,18 +12,18 @@ class Game extends Sprite implements GameObject {
     public static final HEIGHT = 320;
     public static final TOOLBAR_HEIGHT = 40;
 
+    public var spriteSheet:SpriteSheet;
+    public var entityDisplayLayer:Tilemap;
+
     var isMouseOver = false;
     var scrolling = false;
     var xScrollStart = 0.0;
 
-    var spriteSheet:SpriteSheet;
-    var entityDisplayLayer:Tilemap;
-
-    var trees:Array<Tree> = new Array();
+    var island:Island;
 
     var toolbar:Toolbar;
 
-    var island:Bitmap;
+    var islandBitmap:Bitmap;
     var islandRotation = 0.0;
     var islandRotationSpeed = 0.0;
 
@@ -47,17 +47,14 @@ class Game extends Sprite implements GameObject {
         addChild(toolbar);
 
         var islandBitmapData = Assets.getBitmapData('assets/island.png');
-        island = new Bitmap(islandBitmapData);
-        addChild(island);
+        islandBitmap = new Bitmap(islandBitmapData);
+        addChild(islandBitmap);
 
         spriteSheet = new SpriteSheet();
         entityDisplayLayer = new Tilemap(WIDTH, HEIGHT, spriteSheet.tileset, false);
         addChild(entityDisplayLayer);
 
-        var tree = new Tree(100, 100);
-        tree.init(spriteSheet);
-        entityDisplayLayer.addTile(tree.tile);
-        trees.push(tree);
+        island = new Island(this, islandBitmapData);
     }
 
     public function update() {
@@ -89,13 +86,17 @@ class Game extends Sprite implements GameObject {
         coordinateTransform.translate(WIDTH / 2, HEIGHT * 43 / 70);
 
         var islandTransformMatrix = new Matrix();
-        islandTransformMatrix.translate(-island.bitmapData.width / 2, -island.bitmapData.height / 2);
+        islandTransformMatrix.translate(-islandBitmap.bitmapData.width / 2, -islandBitmap.bitmapData.height / 2);
         islandTransformMatrix.concat(coordinateTransform);
-        island.transform.matrix = islandTransformMatrix;
+        islandBitmap.transform.matrix = islandTransformMatrix;
 
-        for (tree in trees) {
+        for (tree in island.trees) {
             tree.updatePos(coordinateTransform);
         }
+
+        entityDisplayLayer.sortTiles((t1, t2) -> {
+            return t1.y - t2.y < 0 ? -1 : 1;
+        });
     }
 
     function onRollOut(event) {
