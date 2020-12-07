@@ -1,6 +1,5 @@
 package;
 
-import openfl.display.Tile;
 import openfl.display.Tilemap;
 import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
@@ -14,6 +13,8 @@ class Game extends Sprite implements GameObject {
     public static final TOOLBAR_HEIGHT = 40;
 
     var isMouseOver = false;
+    var scrolling = false;
+    var xScrollStart = 0.0;
 
     var spriteSheet:SpriteSheet;
     var entityDisplayLayer:Tilemap;
@@ -34,6 +35,8 @@ class Game extends Sprite implements GameObject {
     function init() {
         addEventListener(MouseEvent.ROLL_OVER, onRollOver);
         addEventListener(MouseEvent.ROLL_OUT, onRollOut);
+        addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleMouseDown);
+        addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleMouseUp);
 
         graphics.clear();
         graphics.beginFill(0x4379B7);
@@ -67,7 +70,9 @@ class Game extends Sprite implements GameObject {
         //     islandRotationSpeed += 0.002;
         // }
 
-        if (isMouseOver && mouseY > TOOLBAR_HEIGHT) {
+        if (scrolling) {
+            islandRotationSpeed += (mouseX - xScrollStart) / 10000;
+        } else if (isMouseOver && mouseY > TOOLBAR_HEIGHT) {
             if (mouseX < 80)
                 islandRotationSpeed -= 0.02;
             if (mouseX > WIDTH - 80)
@@ -99,5 +104,14 @@ class Game extends Sprite implements GameObject {
 
     function onRollOver(event) {
         isMouseOver = true;
+    }
+
+    function onMiddleMouseDown(event) {
+        scrolling = true;
+        xScrollStart = mouseX;
+    }
+
+    function onMiddleMouseUp(event) {
+        scrolling = false;
     }
 }
