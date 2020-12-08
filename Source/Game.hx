@@ -59,6 +59,7 @@ class Game extends Sprite {
 
     public function update() {
         toolbar.update();
+        island.update();
 
         islandRotation += islandRotationSpeed;
         islandRotationSpeed *= 0.7;

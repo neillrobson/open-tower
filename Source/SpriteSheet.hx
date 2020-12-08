@@ -29,7 +29,7 @@ class SpriteSheet {
         towerMid = tileset.addRect(new Rectangle(0, 16, 32, 8));
         towerBot = tileset.addRect(new Rectangle(0, 24, 32, 8));
         trees = new Array<Int>();
-        for (i in 0...15) {
+        for (i in 0...16) {
             trees[i] = tileset.addRect(new Rectangle(32 + 8 * i, 0, 8, 16));
         }
     }

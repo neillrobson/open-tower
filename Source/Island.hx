@@ -24,15 +24,16 @@ class Island {
         }
     }
 
-    public function update() {}
-
-    public function render() {}
+    public function update() {
+        for (e in entities)
+            e.update();
+    }
 
     function addForest(x0:Float, y0:Float) {
         for (_ in 0...200) {
             var x = x0 + random.floatNormal() * 12;
             var y = y0 + random.floatNormal() * 12;
-            var tree = new Tree(x, y);
+            var tree = new Tree(x, y, Math.floor(Math.random() * 16 * Tree.GROW_SPEED));
             if (isFree(tree.x, tree.y, tree.r)) {
                 addEntity(tree);
             }
