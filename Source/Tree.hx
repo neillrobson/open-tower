@@ -29,4 +29,10 @@ class Tree {
         tile.x = newPoint.x - 4;
         tile.y = newPoint.y - 16;
     }
+
+    public function collides(ex:Float, ey:Float, er:Float) {
+        var xd = x - ex;
+        var yd = y - ey;
+        return (xd * xd + yd * yd) < (r * r + er * er);
+    }
 }
