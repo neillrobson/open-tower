@@ -7,7 +7,7 @@ import openfl.Assets;
 import openfl.display.Bitmap;
 import openfl.display.Sprite;
 
-class Game extends Sprite implements GameObject {
+class Game extends Sprite {
     public static final WIDTH = 512;
     public static final HEIGHT = 320;
     public static final TOOLBAR_HEIGHT = 40;
@@ -90,8 +90,9 @@ class Game extends Sprite implements GameObject {
         islandTransformMatrix.concat(coordinateTransform);
         islandBitmap.transform.matrix = islandTransformMatrix;
 
-        for (tree in island.trees) {
-            tree.updatePos(coordinateTransform);
+        for (e in island.entities) {
+            e.updatePos(coordinateTransform);
+            e.render();
         }
 
         entityDisplayLayer.sortTiles((t1, t2) -> {

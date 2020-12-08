@@ -4,7 +4,7 @@ import openfl.text.TextFormat;
 import openfl.text.TextField;
 import openfl.display.Sprite;
 
-class Toolbar extends Sprite implements GameObject {
+class Toolbar extends Sprite {
     var gameTime = 0;
     var timeText:TextField;
 

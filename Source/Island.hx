@@ -8,7 +8,7 @@ class Island {
 
     private var random:Random = new Random();
 
-    public var trees:Array<Tree> = new Array();
+    public var entities:Array<Entity> = new Array();
 
     public function new(game:Game, image:BitmapData) {
         this.game = game;
@@ -39,16 +39,16 @@ class Island {
         }
     }
 
-    function addEntity(e:Tree) {
+    function addEntity(e:Entity) {
         e.init(game.spriteSheet);
         game.entityDisplayLayer.addTile(e.tile);
-        trees.push(e);
+        entities.push(e);
     }
 
     function isFree(x:Float, y:Float, r:Float):Bool {
         if (!isOnGround(x, y))
             return false;
-        for (e in trees) {
+        for (e in entities) {
             if (e.collides(x, y, r))
                 return false;
         }
