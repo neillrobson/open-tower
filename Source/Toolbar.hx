@@ -19,7 +19,8 @@ class Toolbar extends Sprite {
     var rockText:TextField;
     var foodText:TextField;
 
-    var selectedHouseType = 0;
+    public var selectedHouseType(default, null) = 0;
+
     var selectedHouseMarker:Shape;
 
     public function new(width:Int, height:Int, game:Game) {
@@ -46,6 +47,7 @@ class Toolbar extends Sprite {
         addChild(timeText);
 
         populationText = new TextField();
+        populationText.text = "Population: 10 / 10";
         populationText.x = margin;
         populationText.y = margin + 12;
         populationText.defaultTextFormat = textFormat;
@@ -53,6 +55,7 @@ class Toolbar extends Sprite {
         addChild(populationText);
 
         warriorText = new TextField();
+        warriorText.text = "Warriors: 0 / 0";
         warriorText.x = margin;
         warriorText.y = margin + 24;
         warriorText.defaultTextFormat = textFormat;

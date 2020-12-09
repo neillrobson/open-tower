@@ -1,5 +1,6 @@
 package;
 
+import openfl.display.Tile;
 import openfl.display.Tilemap;
 import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
@@ -26,6 +27,8 @@ class Game extends Sprite {
     var islandBitmap:Bitmap;
     var islandRotation = 0.0;
     var islandRotationSpeed = 0.0;
+
+    var cursor:Tile;
 
     public function new() {
         super();
@@ -55,6 +58,9 @@ class Game extends Sprite {
         addChild(toolbar);
 
         island = new Island(this, islandBitmapData);
+
+        cursor = new Tile(spriteSheet.deleteButton.id);
+        entityDisplayLayer.addTile(cursor);
     }
 
     public function update() {
@@ -99,6 +105,14 @@ class Game extends Sprite {
         entityDisplayLayer.sortTiles((t1, t2) -> {
             return t1.y - t2.y < 0 ? -1 : 1;
         });
+
+        if (toolbar.selectedHouseType < 0) {
+            cursor.x = mouseX - 8;
+            cursor.y = mouseY - 8;
+            entityDisplayLayer.addTile(cursor); // Move cursor to front of display
+        } else {
+            entityDisplayLayer.removeTile(cursor);
+        }
     }
 
     function onRollOut(event) {
