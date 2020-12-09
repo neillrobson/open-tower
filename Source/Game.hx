@@ -43,9 +43,6 @@ class Game extends Sprite {
         graphics.drawRect(0, 0, WIDTH, HEIGHT);
         graphics.endFill();
 
-        toolbar = new Toolbar(WIDTH, TOOLBAR_HEIGHT);
-        addChild(toolbar);
-
         var islandBitmapData = Assets.getBitmapData('assets/island.png');
         islandBitmap = new Bitmap(islandBitmapData);
         addChild(islandBitmap);
@@ -53,6 +50,9 @@ class Game extends Sprite {
         spriteSheet = new SpriteSheet();
         entityDisplayLayer = new Tilemap(WIDTH, HEIGHT, spriteSheet.tileset, false);
         addChild(entityDisplayLayer);
+
+        toolbar = new Toolbar(WIDTH, TOOLBAR_HEIGHT, this);
+        addChild(toolbar);
 
         island = new Island(this, islandBitmapData);
     }
