@@ -71,9 +71,9 @@ class Game extends Sprite {
         if (scrolling) {
             islandRotationSpeed += (mouseX - xScrollStart) / 10000;
         } else if (isMouseOver && mouseY > TOOLBAR_HEIGHT) {
-            if (mouseX < 80)
+            if (mouseX < 40)
                 islandRotationSpeed -= 0.02;
-            if (mouseX > WIDTH - 80)
+            if (mouseX > WIDTH - 40)
                 islandRotationSpeed += 0.02;
         }
     }
