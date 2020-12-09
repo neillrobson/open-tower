@@ -53,9 +53,9 @@ class Toolbar extends Sprite {
 
             var img;
             if (i == -1) {
-                img = new Bitmap(spriteSheet.getBitmapData(spriteSheet.deleteButton));
+                img = new Bitmap(spriteSheet.deleteButton.bitmapData);
             } else {
-                img = new Bitmap(spriteSheet.getBitmapData(HouseType.houseTypes[i].getImage(spriteSheet)));
+                img = new Bitmap(HouseType.houseTypes[i].getImage(spriteSheet).bitmapData);
             }
             img.x = img.y = 2;
             houseButton.addChild(img);

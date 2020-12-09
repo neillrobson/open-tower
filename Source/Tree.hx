@@ -24,6 +24,6 @@ class Tree extends Entity {
     public override function render() {
         tile.x = xr - 4;
         tile.y = yr - 16;
-        tile.id = spriteSheet.trees[15 - Std.int(age / GROW_SPEED)];
+        tile.id = spriteSheet.trees[15 - Std.int(age / GROW_SPEED)].id;
     }
 }
