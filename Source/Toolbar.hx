@@ -1,5 +1,6 @@
 package;
 
+import openfl.Assets;
 import openfl.display.Shape;
 import openfl.events.MouseEvent;
 import openfl.display.Bitmap;
@@ -12,6 +13,11 @@ class Toolbar extends Sprite {
     var gameTime = 0;
 
     var timeText:TextField;
+    var populationText:TextField;
+    var warriorText:TextField;
+    var woodText:TextField;
+    var rockText:TextField;
+    var foodText:TextField;
 
     var selectedHouseType = 0;
     var selectedHouseMarker:Shape;
@@ -23,17 +29,59 @@ class Toolbar extends Sprite {
     }
 
     function init(width, height) {
+        var margin = 2;
+
         graphics.beginFill(0x87ADFF);
         graphics.drawRect(0, 0, width, height);
         graphics.endFill();
 
+        var font = Assets.getFont('assets/nokiafc22.ttf');
+        var textFormat = new TextFormat(font.fontName, 8, 0xFFFFFF, true);
+
         timeText = new TextField();
-        timeText.x = 4;
-        timeText.y = 4;
-        timeText.width = 400;
-        timeText.defaultTextFormat = new TextFormat(null, 20, 0xFFFFFF, true);
+        timeText.x = margin;
+        timeText.y = margin;
+        timeText.defaultTextFormat = textFormat;
         timeText.selectable = false;
         addChild(timeText);
+
+        populationText = new TextField();
+        populationText.x = margin;
+        populationText.y = margin + 12;
+        populationText.defaultTextFormat = textFormat;
+        populationText.selectable = false;
+        addChild(populationText);
+
+        warriorText = new TextField();
+        warriorText.x = margin;
+        warriorText.y = margin + 24;
+        warriorText.defaultTextFormat = textFormat;
+        warriorText.selectable = false;
+        addChild(warriorText);
+
+        woodText = new TextField();
+        woodText.text = "Wood: 9999";
+        woodText.defaultTextFormat = textFormat;
+        woodText.selectable = false;
+        woodText.x = game.width - woodText.textWidth - 8;
+        woodText.y = margin;
+        addChild(woodText);
+
+        rockText = new TextField();
+        rockText.text = "Rock: 9999";
+        rockText.defaultTextFormat = textFormat;
+        rockText.selectable = false;
+        rockText.x = game.width - rockText.textWidth - 8;
+        rockText.y = margin + 12;
+        addChild(rockText);
+
+        foodText = new TextField();
+        foodText.text = "Food: 9999";
+        foodText.defaultTextFormat = textFormat;
+        foodText.selectable = false;
+        foodText.x = game.width - foodText.textWidth - 8;
+        foodText.y = margin + 24;
+        addChild(foodText);
 
         var spriteSheet = game.spriteSheet;
 
