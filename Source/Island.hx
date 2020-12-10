@@ -1,5 +1,6 @@
 package;
 
+import openfl.geom.Point;
 import openfl.display.BitmapData;
 
 class Island {
@@ -44,6 +45,11 @@ class Island {
         e.init(game.spriteSheet);
         game.entityDisplayLayer.addTile(e.tile);
         entities.push(e);
+    }
+
+    public function canPlaceHouse(xm:Float, ym:Float, type:HouseType) {
+        var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
+        return gameCoord.x < 0 && gameCoord.y < 0;
     }
 
     function isFree(x:Float, y:Float, r:Float):Bool {

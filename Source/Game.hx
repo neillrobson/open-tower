@@ -16,6 +16,8 @@ class Game extends Sprite {
     public var spriteSheet:SpriteSheet;
     public var entityDisplayLayer:Tilemap;
 
+    public var coordinateTransform:Matrix = new Matrix();
+
     var isMouseOver = false;
     var scrolling = false;
     var xScrollStart = 0.0;
@@ -87,7 +89,7 @@ class Game extends Sprite {
     public function render() {
         toolbar.render();
 
-        var coordinateTransform = new Matrix();
+        coordinateTransform.identity();
         coordinateTransform.rotate(islandRotation);
         coordinateTransform.scale(1.5, 0.75);
         coordinateTransform.translate(WIDTH / 2, HEIGHT * 43 / 70);
@@ -106,12 +108,20 @@ class Game extends Sprite {
             return t1.y - t2.y < 0 ? -1 : 1;
         });
 
-        if (toolbar.selectedHouseType < 0) {
+        if (toolbar.selectedHouseType >= 0) {
+            var type = HouseType.houseTypes[toolbar.selectedHouseType];
+            if (island.canPlaceHouse(mouseX, mouseY, type)) {
+                cursor.id = type.getImage(spriteSheet).id;
+                cursor.x = mouseX - 8;
+                cursor.y = mouseY - 8;
+                entityDisplayLayer.addTile(cursor);
+            } else {
+                entityDisplayLayer.removeTile(cursor);
+            }
+        } else {
             cursor.x = mouseX - 8;
             cursor.y = mouseY - 8;
             entityDisplayLayer.addTile(cursor); // Move cursor to front of display
-        } else {
-            entityDisplayLayer.removeTile(cursor);
         }
     }
 
