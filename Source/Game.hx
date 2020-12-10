@@ -81,6 +81,7 @@ class Game extends Sprite {
         titleText = new TextField();
         titleText.text = "Click to start the game";
         titleText.defaultTextFormat = textFormat;
+        titleText.selectable = false;
         titleText.width = titleText.textWidth;
         titleText.x = (WIDTH - titleText.width) / 2;
         titleText.y = HEIGHT - 16;
