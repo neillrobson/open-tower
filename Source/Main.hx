@@ -32,6 +32,8 @@ class Main extends Sprite {
         game = new Game();
         addChild(game);
 
+        addChild(new InfoDebug());
+
         onResize(null);
     }
 
