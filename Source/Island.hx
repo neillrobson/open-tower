@@ -49,7 +49,17 @@ class Island {
 
     public function canPlaceHouse(xm:Float, ym:Float, type:HouseType) {
         var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
-        return gameCoord.x < 0 && gameCoord.y < 0;
+        var house = new House(gameCoord.x, gameCoord.y, type);
+        return isFree(house.x, house.y, house.r);
+    }
+
+    public function placeHouse(xm:Float, ym:Float, type:HouseType) {
+        var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
+        var house = new House(gameCoord.x, gameCoord.y, type);
+
+        if (isFree(house.x, house.y, house.r)) {
+            addEntity(house);
+        }
     }
 
     function isFree(x:Float, y:Float, r:Float):Bool {

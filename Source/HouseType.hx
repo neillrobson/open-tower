@@ -14,15 +14,15 @@ class HouseType {
     public static final BARRACKS = new HouseType(3, "Barracks", 10, 15, 50, 0);
     public static final RESIDENCE = new HouseType(4, "Residence", 10, 30, 30, 30);
 
-    private final image:Int;
-    private final radius:Int;
-    private final wood:Int;
-    private final rock:Int;
-    private final food:Int;
-    private final name:String;
+    public final spriteIndex:Int;
+    public final radius:Int;
+    public final wood:Int;
+    public final rock:Int;
+    public final food:Int;
+    public final name:String;
 
-    private function new(image:Int, name:String, radius:Int, wood:Int, rock:Int, food:Int) {
-        this.image = image;
+    private function new(spriteIndex:Int, name:String, radius:Int, wood:Int, rock:Int, food:Int) {
+        this.spriteIndex = spriteIndex;
         this.radius = radius;
         this.wood = wood;
         this.rock = rock;
@@ -32,6 +32,6 @@ class HouseType {
     }
 
     public function getImage(spriteSheet:SpriteSheet) {
-        return spriteSheet.houses[image % 2 + 1][Std.int(image / 2)];
+        return spriteSheet.houses[spriteIndex % 2 + 1][Std.int(spriteIndex / 2)];
     }
 }

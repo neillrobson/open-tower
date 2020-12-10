@@ -151,7 +151,7 @@ class Game extends Sprite {
                 if (island.canPlaceHouse(mouseX, mouseY, type)) {
                     cursor.id = type.getImage(spriteSheet).id;
                     cursor.x = mouseX - 8;
-                    cursor.y = mouseY - 8;
+                    cursor.y = mouseY - 12;
                     cursor.alpha = 1;
                 } else {
                     cursor.alpha = 0;
@@ -194,6 +194,10 @@ class Game extends Sprite {
         if (titleScreen) {
             titleScreen = false;
             return;
+        }
+
+        if (toolbar.selectedHouseType >= 0) {
+            island.placeHouse(mouseX, mouseY, HouseType.houseTypes[toolbar.selectedHouseType]);
         }
     }
 }
