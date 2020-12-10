@@ -4,7 +4,7 @@
     <meta title="OpenTower" package="com.neillrobson.opentower" version="1.0.0" company="Neill Robson" />
     <app main="Main" path="Export" file="OpenTower" />
 
-    <window background="0x000000" />
+    <window background="0x000000" fps="60" />
 
     <source path="Source" />
 
