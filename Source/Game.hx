@@ -18,6 +18,8 @@ class Game extends Sprite {
 
     public var coordinateTransform:Matrix = new Matrix();
 
+    var titleScreen = true;
+
     var isMouseOver = false;
     var scrolling = false;
     var xScrollStart = 0.0;
@@ -42,6 +44,7 @@ class Game extends Sprite {
         addEventListener(MouseEvent.ROLL_OUT, onRollOut);
         addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleMouseDown);
         addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleMouseUp);
+        addEventListener(MouseEvent.CLICK, onClick);
 
         graphics.clear();
         graphics.beginFill(0x4379B7);
@@ -66,31 +69,33 @@ class Game extends Sprite {
     }
 
     public function update() {
-        toolbar.update();
-        island.update();
+        if (!titleScreen) {
+            toolbar.update();
+            island.update();
+        }
 
         islandRotation += islandRotationSpeed;
         islandRotationSpeed *= 0.7;
 
-        // if (true) {
-        //     islandRotationSpeed += 0.002;
-        // }
-
-        if (scrolling) {
-            islandRotationSpeed += (mouseX - xScrollStart) / 10000;
-        } else if (isMouseOver && mouseY > TOOLBAR_HEIGHT) {
-            if (mouseX < 40)
-                islandRotationSpeed -= 0.02;
-            if (mouseX > WIDTH - 40)
-                islandRotationSpeed += 0.02;
+        if (titleScreen) {
+            islandRotationSpeed += 0.002;
+        } else {
+            if (scrolling) {
+                islandRotationSpeed += (mouseX - xScrollStart) / 10000;
+            } else if (isMouseOver && mouseY > TOOLBAR_HEIGHT) {
+                if (mouseX < 40)
+                    islandRotationSpeed -= 0.02;
+                if (mouseX > WIDTH - 40)
+                    islandRotationSpeed += 0.02;
+            }
         }
     }
 
-    public function render() {
+    public function render(alpha:Float = 0.0) {
         toolbar.render();
 
         coordinateTransform.identity();
-        coordinateTransform.rotate(islandRotation);
+        coordinateTransform.rotate(islandRotation + islandRotationSpeed * alpha);
         coordinateTransform.scale(1.5, 0.75);
         coordinateTransform.translate(WIDTH / 2, HEIGHT * 43 / 70);
 
@@ -119,6 +124,7 @@ class Game extends Sprite {
                 entityDisplayLayer.removeTile(cursor);
             }
         } else {
+            cursor.id = spriteSheet.deleteButton.id;
             cursor.x = mouseX - 8;
             cursor.y = mouseY - 8;
             entityDisplayLayer.addTile(cursor); // Move cursor to front of display
@@ -140,5 +146,12 @@ class Game extends Sprite {
 
     function onMiddleMouseUp(event) {
         scrolling = false;
+    }
+
+    function onClick(event) {
+        if (titleScreen) {
+            titleScreen = false;
+            return;
+        }
     }
 }

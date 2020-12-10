@@ -67,7 +67,7 @@ class Main extends Sprite {
             }
         }
 
-        render();
+        render((elapsedTime - lastTime) / SECONDS_PER_TICK);
     }
 
     function update() {
@@ -76,14 +76,14 @@ class Main extends Sprite {
         game.update();
 
         if (tickCount % TICKS_PER_SECOND == 0) {
-            trace('$frames fps');
+            // trace('$frames fps');
             frames = 0;
         }
     }
 
-    function render() {
+    function render(alpha:Float = 0.0) {
         ++frames;
 
-        game.render();
+        game.render(alpha);
     }
 }
