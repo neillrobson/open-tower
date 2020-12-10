@@ -11,7 +11,8 @@ class Main extends Sprite {
 
     var lastTime = -1.0;
 
-    var tickCount = 0;
+    public var tickCount(default, null) = 0;
+
     var frames = 0;
 
     var game:Game;
@@ -29,7 +30,7 @@ class Main extends Sprite {
     }
 
     function init() {
-        game = new Game();
+        game = new Game(this);
         addChild(game);
 
         addChild(new InfoDebug());

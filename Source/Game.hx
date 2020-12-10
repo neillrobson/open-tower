@@ -1,5 +1,7 @@
 package;
 
+import openfl.text.TextFormat;
+import openfl.text.TextField;
 import openfl.display.Tile;
 import openfl.display.Tilemap;
 import openfl.events.MouseEvent;
@@ -18,6 +20,8 @@ class Game extends Sprite {
 
     public var coordinateTransform:Matrix = new Matrix();
 
+    final main:Main;
+
     var titleScreen = true;
 
     var isMouseOver = false;
@@ -32,10 +36,14 @@ class Game extends Sprite {
     var islandRotation = 0.0;
     var islandRotationSpeed = 0.0;
 
+    var logo:Bitmap;
+    var titleText:TextField;
+
     var cursor:Tile;
 
-    public function new() {
+    public function new(main:Main) {
         super();
+        this.main = main;
         init();
     }
 
@@ -61,6 +69,22 @@ class Game extends Sprite {
 
         toolbar = new Toolbar(WIDTH, TOOLBAR_HEIGHT, this);
         addChild(toolbar);
+
+        logo = new Bitmap(Assets.getBitmapData('assets/logo.png'));
+        logo.x = (WIDTH - logo.bitmapData.width) / 2;
+        logo.y = 16;
+        addChild(logo);
+
+        var font = Assets.getFont('assets/nokiafc22.ttf');
+        var textFormat = new TextFormat(font.fontName, 8, 0xFFFFFF, true);
+
+        titleText = new TextField();
+        titleText.text = "Click to start the game";
+        titleText.defaultTextFormat = textFormat;
+        titleText.width = titleText.textWidth;
+        titleText.x = (WIDTH - titleText.width) / 2;
+        titleText.y = HEIGHT - 16;
+        addChild(titleText);
 
         island = new Island(this, islandBitmapData);
 
@@ -92,7 +116,12 @@ class Game extends Sprite {
     }
 
     public function render(alpha:Float = 0.0) {
-        toolbar.render();
+        if (titleScreen) {
+            toolbar.alpha = 0;
+        } else {
+            toolbar.alpha = 1;
+            toolbar.render();
+        }
 
         coordinateTransform.identity();
         coordinateTransform.rotate(islandRotation + islandRotationSpeed * alpha);
@@ -112,22 +141,35 @@ class Game extends Sprite {
         entityDisplayLayer.sortTiles((t1, t2) -> {
             return t1.y - t2.y < 0 ? -1 : 1;
         });
+        entityDisplayLayer.addTile(cursor); // Move cursor to end of display list
 
-        if (toolbar.selectedHouseType >= 0) {
-            var type = HouseType.houseTypes[toolbar.selectedHouseType];
-            if (island.canPlaceHouse(mouseX, mouseY, type)) {
-                cursor.id = type.getImage(spriteSheet).id;
+        if (titleScreen) {
+            cursor.alpha = 0;
+        } else {
+            if (toolbar.selectedHouseType >= 0) {
+                var type = HouseType.houseTypes[toolbar.selectedHouseType];
+                if (island.canPlaceHouse(mouseX, mouseY, type)) {
+                    cursor.id = type.getImage(spriteSheet).id;
+                    cursor.x = mouseX - 8;
+                    cursor.y = mouseY - 8;
+                    cursor.alpha = 1;
+                } else {
+                    cursor.alpha = 0;
+                }
+            } else {
+                cursor.id = spriteSheet.deleteButton.id;
                 cursor.x = mouseX - 8;
                 cursor.y = mouseY - 8;
-                entityDisplayLayer.addTile(cursor);
-            } else {
-                entityDisplayLayer.removeTile(cursor);
+                cursor.alpha = 1;
             }
+        }
+
+        if (titleScreen) {
+            logo.alpha = 1;
+            titleText.alpha = Std.int(main.tickCount / 15) % 2;
         } else {
-            cursor.id = spriteSheet.deleteButton.id;
-            cursor.x = mouseX - 8;
-            cursor.y = mouseY - 8;
-            entityDisplayLayer.addTile(cursor); // Move cursor to front of display
+            logo.alpha = 0;
+            titleText.alpha = 0;
         }
     }
 
