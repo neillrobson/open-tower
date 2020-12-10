@@ -9,11 +9,11 @@ class Entity {
     public var y:Float;
     public var r:Float;
 
-    public var xr:Float;
-    public var yr:Float;
-
     public var spriteSheet:SpriteSheet;
     public var tile = new Tile();
+
+    private var anchorX = 0;
+    private var anchorY = 0;
 
     public function new(x:Float, y:Float, r:Float) {
         this.x = x;
@@ -27,8 +27,8 @@ class Entity {
 
     public function updatePos(coordinateTransform:Matrix) {
         var newPoint = coordinateTransform.transformPoint(new Point(x, y));
-        xr = newPoint.x;
-        yr = newPoint.y;
+        tile.x = newPoint.x - anchorX;
+        tile.y = newPoint.y - anchorY;
     }
 
     public function update() {}

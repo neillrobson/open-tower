@@ -151,8 +151,8 @@ class Game extends Sprite {
                 var type = HouseType.houseTypes[toolbar.selectedHouseType];
                 if (island.canPlaceHouse(mouseX, mouseY, type)) {
                     cursor.id = type.getImage(spriteSheet).id;
-                    cursor.x = mouseX - 8;
-                    cursor.y = mouseY - 12;
+                    cursor.x = mouseX - type.anchorX;
+                    cursor.y = mouseY - type.anchorY;
                     cursor.alpha = 1;
                 } else {
                     cursor.alpha = 0;
