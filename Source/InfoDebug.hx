@@ -1,5 +1,6 @@
 package;
 
+import openfl.Assets;
 import openfl.Lib;
 import openfl.text.TextField;
 import openfl.events.Event;
@@ -18,7 +19,8 @@ class InfoDebug extends TextField {
         super();
         times = [];
         selectable = false;
-        defaultTextFormat = new TextFormat("_sans", 15, inCol);
+        var font = Assets.getFont('assets/nokiafc22.ttf');
+        defaultTextFormat = new TextFormat(font.fontName, 15, inCol);
         width = 150 * 4;
         height = 70;
         y = Lib.current.stage.stageHeight - 20;
