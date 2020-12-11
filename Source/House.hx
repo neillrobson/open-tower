@@ -11,8 +11,14 @@ class House extends Entity {
         this.anchorY = type.anchorY;
     }
 
-    public override function init(spriteSheet:SpriteSheet) {
-        super.init(spriteSheet);
+    public override function init(island:Island, spriteSheet:SpriteSheet) {
+        super.init(island, spriteSheet);
         tile.id = type.getImage(spriteSheet).id;
+    }
+
+    public function sell() {
+        island.resources.add(WOOD, Std.int(type.wood * 3 / 4));
+        island.resources.add(ROCK, Std.int(type.rock * 3 / 4));
+        alive = false;
     }
 }

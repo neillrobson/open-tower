@@ -28,7 +28,7 @@ class Game extends Sprite {
     var scrolling = false;
     var xScrollStart = 0.0;
 
-    var island:Island;
+    public var island:Island;
 
     var toolbar:Toolbar;
 
@@ -207,7 +207,7 @@ class Game extends Sprite {
         } else {
             var e = island.getEntityAtMouse(mouseX, mouseY, e -> Std.isOfType(e, House));
             if (e != null) {
-                e.alive = false;
+                cast(e, House).sell();
             }
         }
     }

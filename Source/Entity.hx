@@ -14,6 +14,8 @@ class Entity {
     public var spriteSheet:SpriteSheet;
     public var tile = new Tile();
 
+    var island:Island;
+
     public var alive = true;
 
     private var anchorX = 0;
@@ -25,7 +27,8 @@ class Entity {
         this.r = r;
     }
 
-    public function init(spriteSheet:SpriteSheet) {
+    public function init(island:Island, spriteSheet:SpriteSheet) {
+        this.island = island;
         this.spriteSheet = spriteSheet;
     }
 

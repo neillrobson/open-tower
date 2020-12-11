@@ -143,5 +143,9 @@ class Toolbar extends Sprite {
         timeText.text = timeString;
 
         selectedHouseMarker.x = getHouseXCoord(selectedHouseType);
+
+        woodText.text = 'Wood: ${game.island.resources.wood}';
+        rockText.text = 'Rock: ${game.island.resources.rock}';
+        foodText.text = 'Food: ${game.island.resources.food}';
     }
 }

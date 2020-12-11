@@ -11,6 +11,7 @@ class Island {
     private var random:Random = new Random();
 
     public var entities:Array<Entity> = new Array();
+    public var resources:Resources = new Resources();
 
     public function new(game:Game, image:BitmapData) {
         this.game = game;
@@ -47,7 +48,7 @@ class Island {
     }
 
     function addEntity(e:Entity) {
-        e.init(game.spriteSheet);
+        e.init(this, game.spriteSheet);
         game.entityDisplayLayer.addTile(e.tile);
         entities.push(e);
     }
@@ -85,17 +86,22 @@ class Island {
     }
 
     public function canPlaceHouse(xm:Float, ym:Float, type:HouseType) {
+        if (!resources.canAfford(type))
+            return false;
         var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
         var house = new House(gameCoord.x, gameCoord.y, type);
         return isFree(house.x, house.y, house.r);
     }
 
     public function placeHouse(xm:Float, ym:Float, type:HouseType) {
+        if (!resources.canAfford(type))
+            return;
         var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
         var house = new House(gameCoord.x, gameCoord.y, type);
 
         if (isFree(house.x, house.y, house.r)) {
             addEntity(house);
+            resources.charge(type);
         }
     }
 
