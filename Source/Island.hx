@@ -1,5 +1,6 @@
 package;
 
+import Entity.TargetFilter;
 import openfl.geom.Point;
 import openfl.display.BitmapData;
 
@@ -26,8 +27,12 @@ class Island {
     }
 
     public function update() {
-        for (e in entities)
+        for (e in entities) {
             e.update();
+            if (!e.alive) {
+                removeEntity(e);
+            }
+        }
     }
 
     function addForest(x0:Float, y0:Float) {
@@ -45,6 +50,38 @@ class Island {
         e.init(game.spriteSheet);
         game.entityDisplayLayer.addTile(e.tile);
         entities.push(e);
+    }
+
+    function removeEntity(e:Entity) {
+        game.entityDisplayLayer.removeTile(e.tile);
+        entities.remove(e);
+    }
+
+    public function getEntityAt(x:Float, y:Float, r:Float, accept:TargetFilter, exception:Entity):Entity {
+        var minDist = Math.POSITIVE_INFINITY;
+        var minDistEntity:Entity = null;
+
+        for (e in entities) {
+            if (e == exception)
+                continue;
+            if (accept != null && !accept(e))
+                continue;
+
+            if (e.collides(x, y, r)) {
+                var dist = Math.pow(e.x - x, 2) + Math.pow(e.y - y, 2);
+                if (dist < minDist) {
+                    minDist = dist;
+                    minDistEntity = e;
+                }
+            }
+        }
+
+        return minDistEntity;
+    }
+
+    public function getEntityAtMouse(xm:Float, ym:Float, accept:TargetFilter):Entity {
+        var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
+        return getEntityAt(gameCoord.x, gameCoord.y, 8, accept, null);
     }
 
     public function canPlaceHouse(xm:Float, ym:Float, type:HouseType) {

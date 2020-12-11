@@ -158,10 +158,15 @@ class Game extends Sprite {
                     cursor.alpha = 0;
                 }
             } else {
-                cursor.id = spriteSheet.deleteButton.id;
-                cursor.x = mouseX - 8;
-                cursor.y = mouseY - 8;
-                cursor.alpha = 1;
+                var e = island.getEntityAtMouse(mouseX, mouseY, e -> Std.isOfType(e, House));
+                if (e != null) {
+                    cursor.id = spriteSheet.deleteButton.id;
+                    cursor.x = mouseX - 8;
+                    cursor.y = mouseY - 8;
+                    cursor.alpha = 1;
+                } else {
+                    cursor.alpha = 0;
+                }
             }
         }
 
@@ -199,6 +204,11 @@ class Game extends Sprite {
 
         if (toolbar.selectedHouseType >= 0) {
             island.placeHouse(mouseX, mouseY, HouseType.houseTypes[toolbar.selectedHouseType]);
+        } else {
+            var e = island.getEntityAtMouse(mouseX, mouseY, e -> Std.isOfType(e, House));
+            if (e != null) {
+                e.alive = false;
+            }
         }
     }
 }

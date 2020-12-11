@@ -4,6 +4,8 @@ import openfl.geom.Point;
 import openfl.geom.Matrix;
 import openfl.display.Tile;
 
+typedef TargetFilter = Entity->Bool;
+
 class Entity {
     public var x:Float;
     public var y:Float;
@@ -11,6 +13,8 @@ class Entity {
 
     public var spriteSheet:SpriteSheet;
     public var tile = new Tile();
+
+    public var alive = true;
 
     private var anchorX = 0;
     private var anchorY = 0;
