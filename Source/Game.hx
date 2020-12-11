@@ -22,7 +22,7 @@ class Game extends Sprite {
 
     final main:Main;
 
-    var titleScreen = true;
+    var titleScreen(default, set) = true;
 
     var isMouseOver = false;
     var scrolling = false;
@@ -67,8 +67,8 @@ class Game extends Sprite {
         entityDisplayLayer = new Tilemap(WIDTH, HEIGHT, spriteSheet.tileset, false);
         addChild(entityDisplayLayer);
 
+        // Don't add yet, because we're starting on the title screen.
         toolbar = new Toolbar(WIDTH, TOOLBAR_HEIGHT, this);
-        addChild(toolbar);
 
         logo = new Bitmap(Assets.getBitmapData('assets/logo.png'));
         logo.x = (WIDTH - logo.bitmapData.width) / 2;
@@ -89,8 +89,8 @@ class Game extends Sprite {
 
         island = new Island(this, islandBitmapData);
 
-        cursor = new Tile(spriteSheet.deleteButton.id);
-        entityDisplayLayer.addTile(cursor);
+        // Don't add cursor yet; we're starting on title screen
+        cursor = new Tile();
     }
 
     public function update() {
@@ -117,10 +117,7 @@ class Game extends Sprite {
     }
 
     public function render(alpha:Float = 0.0) {
-        if (titleScreen) {
-            toolbar.alpha = 0;
-        } else {
-            toolbar.alpha = 1;
+        if (!titleScreen) {
             toolbar.render();
         }
 
@@ -142,11 +139,10 @@ class Game extends Sprite {
         entityDisplayLayer.sortTiles((t1, t2) -> {
             return t1.y - t2.y < 0 ? -1 : 1;
         });
-        entityDisplayLayer.addTile(cursor); // Move cursor to end of display list
+        // Move cursor to end of display list
+        entityDisplayLayer.setTileIndex(cursor, entityDisplayLayer.numTiles - 1);
 
-        if (titleScreen) {
-            cursor.alpha = 0;
-        } else {
+        if (!titleScreen) {
             if (toolbar.selectedHouseType >= 0) {
                 var type = HouseType.houseTypes[toolbar.selectedHouseType];
                 if (island.canPlaceHouse(mouseX, mouseY, type)) {
@@ -171,11 +167,7 @@ class Game extends Sprite {
         }
 
         if (titleScreen) {
-            logo.alpha = 1;
             titleText.alpha = Std.int(main.tickCount / 15) % 2;
-        } else {
-            logo.alpha = 0;
-            titleText.alpha = 0;
         }
     }
 
@@ -210,5 +202,21 @@ class Game extends Sprite {
                 cast(e, House).sell();
             }
         }
+    }
+
+    function set_titleScreen(ts:Bool):Bool {
+        if (ts) {
+            removeChild(toolbar);
+            entityDisplayLayer.removeTile(cursor);
+            addChild(logo);
+            addChild(titleText);
+        } else {
+            addChild(toolbar);
+            entityDisplayLayer.addTile(cursor);
+            removeChild(logo);
+            removeChild(titleText);
+        }
+
+        return titleScreen = ts;
     }
 }
