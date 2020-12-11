@@ -110,7 +110,8 @@ class Toolbar extends Sprite {
             }
             img.x = img.y = 2;
             houseButton.addChild(img);
-            houseButton.addEventListener(MouseEvent.CLICK, event -> dispatchEvent(new ToolbarEvent(ToolbarEvent.HOUSE_SELECT, i)));
+            houseButton.addEventListener(MouseEvent.CLICK,
+                event -> dispatchEvent(new ToolbarEvent(ToolbarEvent.HOUSE_SELECT, i)));
             addChild(houseButton);
         }
 

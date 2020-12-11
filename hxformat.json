@@ -8,5 +8,8 @@
                 "openingPolicy": "before"
             }
         }
+    },
+    "wrapping": {
+        "maxLineLength": 100
     }
 }
