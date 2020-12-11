@@ -1,5 +1,6 @@
 package;
 
+import event.ToolbarEvent;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import openfl.display.Tile;
@@ -39,6 +40,7 @@ class Game extends Sprite {
     var logo:Bitmap;
     var titleText:TextField;
 
+    var selectedHouseType:HouseType;
     var cursor:Tile;
 
     public function new(main:Main) {
@@ -67,8 +69,9 @@ class Game extends Sprite {
         entityDisplayLayer = new Tilemap(WIDTH, HEIGHT, spriteSheet.tileset, false);
         addChild(entityDisplayLayer);
 
-        // Don't add yet, because we're starting on the title screen.
+        // Don't add to the display list yet, because we're starting on the title screen.
         toolbar = new Toolbar(WIDTH, TOOLBAR_HEIGHT, this);
+        toolbar.addEventListener(ToolbarEvent.HOUSE_SELECT, onHouseSelect);
 
         logo = new Bitmap(Assets.getBitmapData('assets/logo.png'));
         logo.x = (WIDTH - logo.bitmapData.width) / 2;
@@ -143,12 +146,10 @@ class Game extends Sprite {
         entityDisplayLayer.setTileIndex(cursor, entityDisplayLayer.numTiles - 1);
 
         if (!titleScreen) {
-            if (toolbar.selectedHouseType >= 0) {
-                var type = HouseType.houseTypes[toolbar.selectedHouseType];
-                if (island.canPlaceHouse(mouseX, mouseY, type)) {
-                    cursor.id = type.getImage(spriteSheet).id;
-                    cursor.x = mouseX - type.anchorX;
-                    cursor.y = mouseY - type.anchorY;
+            if (selectedHouseType != null) {
+                if (island.canPlaceHouse(mouseX, mouseY, selectedHouseType)) {
+                    cursor.x = mouseX - selectedHouseType.anchorX;
+                    cursor.y = mouseY - selectedHouseType.anchorY;
                     cursor.alpha = 1;
                 } else {
                     cursor.alpha = 0;
@@ -156,7 +157,6 @@ class Game extends Sprite {
             } else {
                 var e = island.getEntityAtMouse(mouseX, mouseY, e -> Std.isOfType(e, House));
                 if (e != null) {
-                    cursor.id = spriteSheet.deleteButton.id;
                     cursor.x = mouseX - 8;
                     cursor.y = mouseY - 8;
                     cursor.alpha = 1;
@@ -194,13 +194,23 @@ class Game extends Sprite {
             return;
         }
 
-        if (toolbar.selectedHouseType >= 0) {
-            island.placeHouse(mouseX, mouseY, HouseType.houseTypes[toolbar.selectedHouseType]);
+        if (selectedHouseType != null) {
+            island.placeHouse(mouseX, mouseY, selectedHouseType);
         } else {
             var e = island.getEntityAtMouse(mouseX, mouseY, e -> Std.isOfType(e, House));
             if (e != null) {
                 cast(e, House).sell();
             }
+        }
+    }
+
+    function onHouseSelect(event:ToolbarEvent) {
+        if (event.selection >= 0) {
+            selectedHouseType = HouseType.houseTypes[event.selection];
+            cursor.id = selectedHouseType.getImage(spriteSheet).id;
+        } else {
+            selectedHouseType = null;
+            cursor.id = spriteSheet.deleteButton.id;
         }
     }
 

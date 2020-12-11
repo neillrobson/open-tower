@@ -1,5 +1,6 @@
 package;
 
+import event.ToolbarEvent;
 import openfl.Assets;
 import openfl.display.Shape;
 import openfl.events.MouseEvent;
@@ -19,8 +20,6 @@ class Toolbar extends Sprite {
     var rockText:TextField;
     var foodText:TextField;
 
-    public var selectedHouseType(default, null) = 0;
-
     var selectedHouseMarker:Shape;
 
     public function new(width:Int, height:Int, game:Game) {
@@ -30,6 +29,7 @@ class Toolbar extends Sprite {
     }
 
     function init(width, height) {
+        addEventListener(ToolbarEvent.HOUSE_SELECT, onHouseSelect);
         var margin = 2;
 
         graphics.beginFill(0x87ADFF);
@@ -110,7 +110,7 @@ class Toolbar extends Sprite {
             }
             img.x = img.y = 2;
             houseButton.addChild(img);
-            houseButton.addEventListener(MouseEvent.CLICK, event -> selectedHouseType = i);
+            houseButton.addEventListener(MouseEvent.CLICK, event -> dispatchEvent(new ToolbarEvent(ToolbarEvent.HOUSE_SELECT, i)));
             addChild(houseButton);
         }
 
@@ -119,6 +119,8 @@ class Toolbar extends Sprite {
         selectedHouseMarker.graphics.lineStyle(1, 0xFFFFFF);
         selectedHouseMarker.graphics.drawRect(0, 0, 20, 20);
         addChild(selectedHouseMarker);
+
+        dispatchEvent(new ToolbarEvent(ToolbarEvent.HOUSE_SELECT, -1));
     }
 
     private function getHouseXCoord(type):Int {
@@ -142,10 +144,12 @@ class Toolbar extends Sprite {
 
         timeText.text = timeString;
 
-        selectedHouseMarker.x = getHouseXCoord(selectedHouseType);
-
         woodText.text = 'Wood: ${game.island.resources.wood}';
         rockText.text = 'Rock: ${game.island.resources.rock}';
         foodText.text = 'Food: ${game.island.resources.food}';
+    }
+
+    function onHouseSelect(event:ToolbarEvent) {
+        selectedHouseMarker.x = getHouseXCoord(event.selection);
     }
 }
