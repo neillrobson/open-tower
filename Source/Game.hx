@@ -36,6 +36,7 @@ class Game extends Sprite {
     var islandBitmap:Bitmap;
     var islandRotation = 0.0;
     var islandRotationSpeed = 0.0;
+    var islandRotationAcceleration = 0.0;
 
     var logo:Bitmap;
     var titleText:TextField;
@@ -96,27 +97,33 @@ class Game extends Sprite {
         cursor = new Tile();
     }
 
-    public function update() {
+    public function update(elapsed:Float) {
         if (!titleScreen) {
             toolbar.update();
             island.update();
         }
 
-        islandRotation += islandRotationSpeed;
-        islandRotationSpeed *= 0.7;
+        islandRotation += islandRotationSpeed * elapsed;
+        islandRotationSpeed += islandRotationAcceleration * elapsed;
 
         if (titleScreen) {
-            islandRotationSpeed += 0.002;
+            islandRotationAcceleration = 1.2;
         } else {
             if (scrolling) {
-                islandRotationSpeed += (mouseX - xScrollStart) / 10000;
+                islandRotationAcceleration = (mouseX - xScrollStart) / 20;
             } else if (isMouseOver && mouseY > TOOLBAR_HEIGHT) {
                 if (mouseX < 40)
-                    islandRotationSpeed -= 0.02;
-                if (mouseX > WIDTH - 40)
-                    islandRotationSpeed += 0.02;
+                    islandRotationAcceleration = -8;
+                else if (mouseX > WIDTH - 40)
+                    islandRotationAcceleration = 8;
+                else
+                    islandRotationAcceleration = 0;
+            } else {
+                islandRotationAcceleration = 0;
             }
         }
+
+        islandRotationAcceleration -= 5 * islandRotationSpeed;
     }
 
     public function render(alpha:Float = 0.0) {
@@ -130,7 +137,8 @@ class Game extends Sprite {
         coordinateTransform.translate(WIDTH / 2, HEIGHT * 43 / 70);
 
         var islandTransformMatrix = new Matrix();
-        islandTransformMatrix.translate(-islandBitmap.bitmapData.width / 2, -islandBitmap.bitmapData.height / 2);
+        islandTransformMatrix.translate(-islandBitmap.bitmapData.width / 2,
+            -islandBitmap.bitmapData.height / 2);
         islandTransformMatrix.concat(coordinateTransform);
         islandBitmap.transform.matrix = islandTransformMatrix;
 

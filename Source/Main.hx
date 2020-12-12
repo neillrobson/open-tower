@@ -68,13 +68,13 @@ class Main extends Sprite {
             }
         }
 
-        render((elapsedTime - lastTime) / SECONDS_PER_TICK);
+        render(elapsedTime - lastTime);
     }
 
     function update() {
         ++tickCount;
 
-        game.update();
+        game.update(SECONDS_PER_TICK);
 
         if (tickCount % TICKS_PER_SECOND == 0) {
             // trace('$frames fps');
