@@ -1,6 +1,7 @@
 package;
 
 class Tree extends Entity {
+    // TODO: Make these constants independent of tick rate
     public static final GROW_SPEED = 320; // Every ten seconds or so
 
     // public static final SPREAD_INTERVAL = 30000; // Every 1000 seconds

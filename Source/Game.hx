@@ -99,25 +99,25 @@ class Game extends Sprite {
         cursor = new Tile();
     }
 
-    public function update(elapsed:Float) {
+    public function update() {
         if (titleScreen) {
-            pauseTime += elapsed;
+            pauseTime += Main.SECONDS_PER_TICK;
 
             titleText.alpha = Std.int(pauseTime * 2) % 2;
         } else {
-            gameTime += elapsed;
+            gameTime += Main.SECONDS_PER_TICK;
 
             toolbar.update();
             island.update();
         }
 
-        updateIslandRotation(elapsed);
+        updateIslandRotation();
         updateCursor();
     }
 
-    function updateIslandRotation(elapsed:Float) {
-        islandRotation += islandRotationSpeed * elapsed;
-        islandRotationSpeed += islandRotationAcceleration * elapsed;
+    function updateIslandRotation() {
+        islandRotation += islandRotationSpeed * Main.SECONDS_PER_TICK;
+        islandRotationSpeed += islandRotationAcceleration * Main.SECONDS_PER_TICK;
 
         if (titleScreen) {
             islandRotationAcceleration = 1.2;
@@ -139,14 +139,20 @@ class Game extends Sprite {
         islandRotationAcceleration -= 5 * islandRotationSpeed;
     }
 
+    /**
+        @param elapsed Milliseconds since last tick/update
+    **/
     public function render(elapsed:Float = 0.0) {
         updateTransforms(elapsed);
         repositionEntities();
     }
 
+    /**
+        @param elapsed Milliseconds since last tick/update
+    **/
     function updateTransforms(elapsed:Float = 0.0) {
         coordinateTransform.identity();
-        coordinateTransform.rotate(islandRotation + islandRotationSpeed * elapsed);
+        coordinateTransform.rotate(islandRotation + islandRotationSpeed * elapsed / 1000);
         coordinateTransform.scale(1.5, 0.75);
         coordinateTransform.translate(WIDTH / 2, HEIGHT * 43 / 70);
 

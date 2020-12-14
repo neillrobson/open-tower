@@ -1,6 +1,6 @@
 package;
 
-import haxe.Timer;
+import openfl.Lib;
 import openfl.events.Event;
 import openfl.display.Sprite;
 
@@ -8,7 +8,9 @@ class Main extends Sprite {
     public static inline final TICKS_PER_SECOND = 30;
     public static inline final MAX_TICKS_PER_FRAME = 10;
     public static inline final SECONDS_PER_TICK = 1 / TICKS_PER_SECOND;
+    public static inline final MILLISECONDS_PER_TICK = 1000 / TICKS_PER_SECOND;
 
+    /** Milliseconds since last frame render **/
     var lastTime = -1.0;
 
     var game:Game;
@@ -46,22 +48,22 @@ class Main extends Sprite {
     }
 
     function onEnterFrame(event) {
-        var elapsedTime = Timer.stamp();
+        var elapsedTime = Lib.getTimer();
 
         if (lastTime < 0) {
             lastTime = elapsedTime;
-            game.update(SECONDS_PER_TICK);
-        } else if (elapsedTime - lastTime > SECONDS_PER_TICK) {
+            game.update();
+        } else if (elapsedTime - lastTime > MILLISECONDS_PER_TICK) {
             var count = 0;
 
-            while (elapsedTime - lastTime > SECONDS_PER_TICK) {
+            while (elapsedTime - lastTime > MILLISECONDS_PER_TICK) {
                 if (count > MAX_TICKS_PER_FRAME) {
                     lastTime = elapsedTime;
                     break;
                 }
 
-                game.update(SECONDS_PER_TICK);
-                lastTime += SECONDS_PER_TICK;
+                game.update();
+                lastTime += MILLISECONDS_PER_TICK;
                 ++count;
             }
         }
