@@ -19,9 +19,6 @@ class Entity {
 
     public var alive = true;
 
-    private var anchorX = 0;
-    private var anchorY = 0;
-
     public function new(x:Float, y:Float, r:Float) {
         this.x = x;
         this.y = y;
@@ -36,8 +33,8 @@ class Entity {
 
     public function updatePos(coordinateTransform:Matrix) {
         var newPoint = coordinateTransform.transformPoint(new Point(x, y));
-        tile.x = newPoint.x - anchorX;
-        tile.y = newPoint.y - anchorY;
+        tile.x = newPoint.x;
+        tile.y = newPoint.y;
     }
 
     public function update() {}

@@ -13,12 +13,12 @@ class Tree extends Entity {
     public function new(x:Float, y:Float, age:Int) {
         super(x, y, 4);
         this.age = age;
-        anchorX = 4;
-        anchorY = 16;
     }
 
     override function init(island:Island, spriteSheet:SpriteSheet) {
         super.init(island, spriteSheet);
+        tile.originX = 4;
+        tile.originY = 16;
         set_age(age);
     }
 
