@@ -14,6 +14,7 @@ class SpriteSheet {
 
     public final trees:Array<TileData>;
     public final houses:Array<Array<TileData>>;
+    public final peons:Array<Array<TileData>>;
     public final towerTop:TileData;
     public final towerMid:TileData;
     public final towerBot:TileData;
@@ -21,14 +22,13 @@ class SpriteSheet {
 
     private var bitmapDatas:IntMap<BitmapData> = new IntMap();
 
-    // public final farmPlots:Array<Int>;
-    // public final rocks:Array<Int>;
-    // public final carriedResources:Array<Int>;
-    // public final peons:Array<Array<Int>>;
-    // public final smoke:Array<Int>;
-    // public final infoPuffs:Array<Int>;
-    // public final helpButton:Int;
-    // public final soundButtons:Array<Int>;
+    // public final farmPlots:Array<TileData>;
+    // public final rocks:Array<TileData>;
+    // public final carriedResources:Array<TileData>;
+    // public final smoke:Array<TileData>;
+    // public final infoPuffs:Array<TileData>;
+    // public final helpButton:TileData;
+    // public final soundButtons:Array<TileData>;
 
     public function new() {
         tileset = new Tileset(Assets.getBitmapData('assets/sheet.png'));
@@ -47,6 +47,14 @@ class SpriteSheet {
             houses[i] = new Array();
             for (j in 0...8) {
                 houses[i][j] = makeTileData(new Rectangle(160 + i * 16, j * 16, 16, 16));
+            }
+        }
+
+        peons = new Array();
+        for (i in 0...4) {
+            peons[i] = new Array();
+            for (j in 0...12) {
+                peons[i][j] = makeTileData(new Rectangle(32 + 8 * j, 16 + 8 * i, 8, 8));
             }
         }
 

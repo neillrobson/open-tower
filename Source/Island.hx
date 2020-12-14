@@ -4,11 +4,21 @@ import Entity.TargetFilter;
 import openfl.geom.Point;
 import openfl.display.BitmapData;
 
+/**
+    The island coordinates run from -128 to 127 in the X and Y directions. The
+    axes are "left-handed," meaning that the positive Y axis descends down the
+    screen and (more importantly) positive angles will rotate objects clockwise.
+**/
 class Island {
+    private static final xStart = 40;
+    private static final yStart = -60;
+
     private var game:Game;
     private var image:BitmapData;
 
     private var random:Random = new Random();
+
+    public var rot:Float;
 
     public var entities:Array<Entity> = new Array();
     public var resources:Resources = new Resources();
@@ -20,6 +30,20 @@ class Island {
     }
 
     public function init() {
+        addEntity(new House(xStart, yStart, HouseType.GUARDPOST));
+
+        var peonCount = 0;
+        while (peonCount < 10) {
+            var x = xStart + Math.random() * 32 - 16;
+            var y = yStart + Math.random() * 32 - 16;
+            var p = new Peon(x, y, 0);
+
+            if (isFree(p.x, p.y, p.r)) {
+                addEntity(p);
+                ++peonCount;
+            }
+        }
+
         for (_ in 0...20) {
             var x = Math.random() * 256 - 128;
             var y = Math.random() * 256 - 128;
@@ -34,6 +58,16 @@ class Island {
                 removeEntity(e);
             }
         }
+    }
+
+    /**
+        @param rot The rotation of the island view in radians.
+    **/
+    public function render(rot:Float) {
+        this.rot = rot;
+
+        for (e in entities)
+            e.render();
     }
 
     function addForest(x0:Float, y0:Float) {
@@ -58,7 +92,8 @@ class Island {
         entities.remove(e);
     }
 
-    public function getEntityAt(x:Float, y:Float, r:Float, accept:TargetFilter, exception:Entity):Entity {
+    public function getEntityAt(x:Float, y:Float, r:Float, accept:TargetFilter,
+            exception:Entity):Entity {
         var minDist = Math.POSITIVE_INFINITY;
         var minDistEntity:Entity = null;
 
@@ -106,10 +141,14 @@ class Island {
     }
 
     function isFree(x:Float, y:Float, r:Float):Bool {
+        return isFreeExcept(x, y, r, null);
+    }
+
+    public function isFreeExcept(x:Float, y:Float, r:Float, except:Entity):Bool {
         if (!isOnGround(x, y))
             return false;
         for (e in entities) {
-            if (e.collides(x, y, r))
+            if (e != except && e.collides(x, y, r))
                 return false;
         }
         return true;

@@ -143,16 +143,20 @@ class Game extends Sprite {
         @param elapsed Milliseconds since last tick/update
     **/
     public function render(elapsed:Float = 0.0) {
-        updateTransforms(elapsed);
+        var rot = islandRotation + islandRotationSpeed * elapsed / 1000;
+
+        updateTransforms(rot);
         repositionEntities();
+
+        island.render(rot);
     }
 
     /**
-        @param elapsed Milliseconds since last tick/update
+        @param rot Rotation of the island view in radians
     **/
-    function updateTransforms(elapsed:Float = 0.0) {
+    function updateTransforms(rot:Float) {
         coordinateTransform.identity();
-        coordinateTransform.rotate(islandRotation + islandRotationSpeed * elapsed / 1000);
+        coordinateTransform.rotate(rot);
         coordinateTransform.scale(1.5, 0.75);
         coordinateTransform.translate(WIDTH / 2, HEIGHT * 43 / 70);
 
