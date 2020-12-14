@@ -5,15 +5,11 @@ import openfl.events.Event;
 import openfl.display.Sprite;
 
 class Main extends Sprite {
-    public static final TICKS_PER_SECOND = 30;
-    public static final MAX_TICKS_PER_FRAME = 10;
-    public static final SECONDS_PER_TICK = 1 / TICKS_PER_SECOND;
+    public static inline final TICKS_PER_SECOND = 30;
+    public static inline final MAX_TICKS_PER_FRAME = 10;
+    public static inline final SECONDS_PER_TICK = 1 / TICKS_PER_SECOND;
 
     var lastTime = -1.0;
-
-    public var tickCount(default, null) = 0;
-
-    var frames = 0;
 
     var game:Game;
 
@@ -30,10 +26,12 @@ class Main extends Sprite {
     }
 
     function init() {
-        game = new Game(this);
+        game = new Game();
         addChild(game);
 
+        #if debug
         addChild(new InfoDebug());
+        #end
 
         onResize(null);
     }
@@ -52,7 +50,7 @@ class Main extends Sprite {
 
         if (lastTime < 0) {
             lastTime = elapsedTime;
-            update();
+            game.update(SECONDS_PER_TICK);
         } else if (elapsedTime - lastTime > SECONDS_PER_TICK) {
             var count = 0;
 
@@ -62,29 +60,12 @@ class Main extends Sprite {
                     break;
                 }
 
-                update();
+                game.update(SECONDS_PER_TICK);
                 lastTime += SECONDS_PER_TICK;
                 ++count;
             }
         }
 
-        render(elapsedTime - lastTime);
-    }
-
-    function update() {
-        ++tickCount;
-
-        game.update(SECONDS_PER_TICK);
-
-        if (tickCount % TICKS_PER_SECOND == 0) {
-            // trace('$frames fps');
-            frames = 0;
-        }
-    }
-
-    function render(alpha:Float = 0.0) {
-        ++frames;
-
-        game.render(alpha);
+        game.render(elapsedTime - lastTime);
     }
 }

@@ -11,7 +11,6 @@ import openfl.display.Sprite;
 
 class Toolbar extends Sprite {
     var game:Game;
-    var gameTime = 0;
 
     var timeText:TextField;
     var populationText:TextField;
@@ -129,11 +128,7 @@ class Toolbar extends Sprite {
     }
 
     public function update() {
-        ++gameTime;
-    }
-
-    public function render() {
-        var seconds = Std.int(gameTime * Main.SECONDS_PER_TICK);
+        var seconds = Std.int(game.gameTime);
         var minutes = Std.int(seconds / 60);
         var hours = Std.int(minutes / 60);
         seconds %= 60;

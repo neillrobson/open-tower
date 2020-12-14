@@ -21,7 +21,10 @@ class Game extends Sprite {
 
     public var coordinateTransform:Matrix = new Matrix();
 
-    final main:Main;
+    var islandBitmapTransform = new Matrix();
+
+    public var gameTime(default, null) = 0.0;
+    public var pauseTime(default, null) = 0.0;
 
     var titleScreen(default, set) = true;
 
@@ -44,9 +47,8 @@ class Game extends Sprite {
     var selectedHouseType:HouseType;
     var cursor:Tile;
 
-    public function new(main:Main) {
+    public function new() {
         super();
-        this.main = main;
         init();
     }
 
@@ -98,11 +100,22 @@ class Game extends Sprite {
     }
 
     public function update(elapsed:Float) {
-        if (!titleScreen) {
+        if (titleScreen) {
+            pauseTime += elapsed;
+
+            titleText.alpha = Std.int(pauseTime * 2) % 2;
+        } else {
+            gameTime += elapsed;
+
             toolbar.update();
             island.update();
         }
 
+        updateIslandRotation(elapsed);
+        updateCursor();
+    }
+
+    function updateIslandRotation(elapsed:Float) {
         islandRotation += islandRotationSpeed * elapsed;
         islandRotationSpeed += islandRotationAcceleration * elapsed;
 
@@ -126,25 +139,27 @@ class Game extends Sprite {
         islandRotationAcceleration -= 5 * islandRotationSpeed;
     }
 
-    public function render(alpha:Float = 0.0) {
-        if (!titleScreen) {
-            toolbar.render();
-        }
+    public function render(elapsed:Float = 0.0) {
+        updateTransforms(elapsed);
+        repositionEntities();
+    }
 
+    function updateTransforms(elapsed:Float = 0.0) {
         coordinateTransform.identity();
-        coordinateTransform.rotate(islandRotation + islandRotationSpeed * alpha);
+        coordinateTransform.rotate(islandRotation + islandRotationSpeed * elapsed);
         coordinateTransform.scale(1.5, 0.75);
         coordinateTransform.translate(WIDTH / 2, HEIGHT * 43 / 70);
 
-        var islandTransformMatrix = new Matrix();
-        islandTransformMatrix.translate(-islandBitmap.bitmapData.width / 2,
+        islandBitmapTransform.identity();
+        islandBitmapTransform.translate(-islandBitmap.bitmapData.width / 2,
             -islandBitmap.bitmapData.height / 2);
-        islandTransformMatrix.concat(coordinateTransform);
-        islandBitmap.transform.matrix = islandTransformMatrix;
+        islandBitmapTransform.concat(coordinateTransform);
+        islandBitmap.transform.matrix = islandBitmapTransform;
+    }
 
+    function repositionEntities() {
         for (e in island.entities) {
             e.updatePos(coordinateTransform);
-            e.render();
         }
 
         entityDisplayLayer.sortTiles((t1, t2) -> {
@@ -152,7 +167,9 @@ class Game extends Sprite {
         });
         // Move cursor to end of display list
         entityDisplayLayer.setTileIndex(cursor, entityDisplayLayer.numTiles - 1);
+    }
 
+    function updateCursor() {
         if (!titleScreen) {
             if (selectedHouseType != null) {
                 if (island.canPlaceHouse(mouseX, mouseY, selectedHouseType)) {
@@ -172,10 +189,6 @@ class Game extends Sprite {
                     cursor.alpha = 0;
                 }
             }
-        }
-
-        if (titleScreen) {
-            titleText.alpha = Std.int(main.tickCount / 15) % 2;
         }
     }
 
