@@ -15,6 +15,7 @@ class Entity {
     public var tile = new Tile();
 
     var island:Island;
+    var inited = false;
 
     public var alive = true;
 
@@ -30,6 +31,7 @@ class Entity {
     public function init(island:Island, spriteSheet:SpriteSheet) {
         this.island = island;
         this.spriteSheet = spriteSheet;
+        inited = true;
     }
 
     public function updatePos(coordinateTransform:Matrix) {

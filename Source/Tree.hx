@@ -4,7 +4,7 @@ class Tree extends Entity {
     public static final GROW_SPEED = 320; // Every ten seconds or so
 
     // public static final SPREAD_INTERVAL = 30000; // Every 1000 seconds
-    private var age:Int;
+    private var age(default, set):Int;
 
     // private var spreadDelay:Int;
     // private var stamina:Int;
@@ -17,13 +17,20 @@ class Tree extends Entity {
         anchorY = 16;
     }
 
-    public override function update() {
+    override function init(island:Island, spriteSheet:SpriteSheet) {
+        super.init(island, spriteSheet);
+        set_age(age);
+    }
+
+    override public function update() {
         if (age < 15 * GROW_SPEED) {
             ++age;
         }
     }
 
-    public override function render() {
-        tile.id = spriteSheet.trees[15 - Std.int(age / GROW_SPEED)].id;
+    function set_age(newAge:Int) {
+        if (inited)
+            tile.id = spriteSheet.trees[15 - Std.int(newAge / GROW_SPEED)].id;
+        return age = newAge;
     }
 }
