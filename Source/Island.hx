@@ -47,6 +47,12 @@ class Island {
         for (_ in 0...20) {
             var x = Math.random() * 256 - 128;
             var y = Math.random() * 256 - 128;
+            if (x > 0 && y < 0) {
+                if (Math.random() < 0.5)
+                    x = -x;
+                else
+                    y = -y;
+            }
             addForest(x, y);
         }
     }
@@ -93,7 +99,7 @@ class Island {
     }
 
     public function getEntityAt(x:Float, y:Float, r:Float, accept:TargetFilter,
-            exception:Entity):Entity {
+            exception:Entity = null):Entity {
         var minDist = Math.POSITIVE_INFINITY;
         var minDistEntity:Entity = null;
 
@@ -140,11 +146,7 @@ class Island {
         }
     }
 
-    function isFree(x:Float, y:Float, r:Float):Bool {
-        return isFreeExcept(x, y, r, null);
-    }
-
-    public function isFreeExcept(x:Float, y:Float, r:Float, except:Entity):Bool {
+    public function isFree(x:Float, y:Float, r:Float, except:Entity = null):Bool {
         if (!isOnGround(x, y))
             return false;
         for (e in entities) {
