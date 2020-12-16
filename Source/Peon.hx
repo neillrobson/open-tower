@@ -4,10 +4,14 @@ class Peon extends Entity {
     static final animSteps = [0, 1, 0, 2];
     static final animDirs = [2, 0, 3, 1];
 
+    public var job(default, set):Job;
+
     var type:Int;
 
-    var rot:Float;
+    public var rot:Float;
+
     var moveTick:Float;
+    var wanderTime:Int = 0;
 
     override public function new(x:Float, y:Float, type:Int) {
         super(x, y, 1);
@@ -26,16 +30,39 @@ class Peon extends Entity {
     override function update() {
         super.update();
 
-        var speed = 0.5;
+        var speed = 1;
+        if (wanderTime == 0 && job != null && job.hasTarget()) {
+            var rd = job.target.r + r;
+            rot = Math.atan2(job.target.y - y, job.target.x - x);
 
-        var xt = x + Math.cos(rot) * speed;
-        var yt = y + Math.sin(rot) * speed;
+            if (distance(job.target) < rd * rd) {
+                job.arrived();
+                speed = 0;
+            }
+        } else {
+            rot += (Math.random() - 0.5) * Math.random() * 2;
+        }
 
-        if (island.isFreeExcept(xt, yt, r, this)) {
+        if (wanderTime > 0)
+            --wanderTime;
+
+        var xt = x + Math.cos(rot) * speed * 0.4;
+        var yt = y + Math.sin(rot) * speed * 0.4;
+
+        if (island.isFree(xt, yt, r, this)) {
             x = xt;
             y = yt;
         } else {
-            rot += Math.PI * 1.1;
+            if (job != null) {
+                var collided = island.getEntityAt(xt, yt, r, null, this);
+                if (collided != null) {
+                    job.collide(collided);
+                } else {
+                    job.cantReach();
+                }
+            }
+            rot = Math.random() * 2 * Math.PI;
+            wanderTime = Std.int(Math.random() * 30) + 3;
         }
 
         moveTick += speed;
@@ -53,5 +80,12 @@ class Peon extends Entity {
         var animStep = animSteps[mod(Math.floor(moveTick / 4), 4)];
 
         tile.id = spriteSheet.peons[type][animDirs[rotStep] * 3 + animStep].id;
+    }
+
+    function set_job(job:Job):Job {
+        this.job = job;
+        if (job != null)
+            job.init(island, this);
+        return job;
     }
 }
