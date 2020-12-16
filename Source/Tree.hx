@@ -1,5 +1,7 @@
 package;
 
+import Resources.Resource;
+
 class Tree extends Entity {
     public static final GROW_SPEED = 11 * Main.TICKS_PER_SECOND;
 
@@ -32,5 +34,14 @@ class Tree extends Entity {
         if (inited)
             tile.id = spriteSheet.trees[15 - Std.int(newAge / GROW_SPEED)].id;
         return age = newAge;
+    }
+
+    override function givesResource(r:Resource):Bool {
+        return (age / GROW_SPEED > 6) && r == Resource.WOOD;
+    }
+
+    override function gatherResource(r:Resource):Bool {
+        alive = false;
+        return true;
     }
 }
