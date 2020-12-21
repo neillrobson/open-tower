@@ -97,6 +97,7 @@ class Game extends Sprite {
 
         // Don't add cursor yet; we're starting on title screen
         cursor = new Tile();
+        cursor.id = spriteSheet.deleteButton.id;
     }
 
     public function update() {
