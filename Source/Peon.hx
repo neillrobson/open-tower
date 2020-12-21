@@ -30,6 +30,8 @@ class Peon extends Entity {
     override function update() {
         super.update();
 
+        // Calculate speed and direction.
+        // If arrived at job, don't move; instead, do a job.arrived() tick
         var speed = 1;
         if (wanderTime == 0 && job != null && job.hasTarget()) {
             var rd = job.target.r + r;
@@ -49,6 +51,9 @@ class Peon extends Entity {
         var xt = x + Math.cos(rot) * speed * 0.4;
         var yt = y + Math.sin(rot) * speed * 0.4;
 
+        // If we can't move to the designated space, let the job know that we've
+        // collided with something, and do a brief random walk to get around the
+        // obstacle
         if (island.isFree(xt, yt, r, this)) {
             x = xt;
             y = yt;
