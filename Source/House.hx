@@ -6,10 +6,12 @@ import Resources.Resource;
 import Job.Gather;
 
 class House extends Entity {
+    static inline final BUILD_ANIMATION_STEPS = 6;
+    static inline final BUILD_DURATION = Std.int(BUILD_ANIMATION_STEPS * 1.1 * Main.TICKS_PER_SECOND);
+
     final type:HouseType;
 
     var buildTime(default, set) = 0;
-    var buildDuration = 32 * 6;
     var isBuilt(get, null):Bool;
 
     public function new(x:Float, y:Float, type:HouseType, island:Island, spriteSheet:SpriteSheet) {
@@ -32,7 +34,7 @@ class House extends Entity {
     }
 
     public function complete() {
-        buildTime = buildDuration;
+        buildTime = BUILD_DURATION;
     }
 
     public function sell() {
@@ -71,7 +73,7 @@ class House extends Entity {
     }
 
     inline function get_isBuilt():Bool {
-        return buildTime >= buildDuration;
+        return buildTime >= BUILD_DURATION;
     }
 
     function set_buildTime(buildTime:Int):Int {
@@ -79,7 +81,7 @@ class House extends Entity {
         if (isBuilt) {
             tile.id = type.getImage(spriteSheet).id;
         } else {
-            tile.id = spriteSheet.houses[0][Math.floor(buildTime * 6 / buildDuration)].id;
+            tile.id = spriteSheet.houses[0][Math.floor(buildTime * BUILD_ANIMATION_STEPS / BUILD_DURATION)].id;
         }
         return buildTime;
     }
@@ -98,10 +100,10 @@ class House extends Entity {
     }
 
     override function acceptsResource(r:Resource):Bool {
-        return buildTime >= buildDuration && type.acceptResource == r;
+        return buildTime >= BUILD_DURATION && type.acceptResource == r;
     }
 
     override function submitResource(r:Resource):Bool {
-        return buildTime >= buildDuration && type.acceptResource == r;
+        return buildTime >= BUILD_DURATION && type.acceptResource == r;
     }
 }

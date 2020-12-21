@@ -3,9 +3,11 @@ package;
 import Resources.Resource;
 
 class Job {
+    static inline final BASE_BORE_TIME = 16 * Main.TICKS_PER_SECOND;
+
     var island:Island;
     var peon:Peon;
-    var boreTime:Int = 500;
+    var boreTime:Int = BASE_BORE_TIME;
 
     public var target:Entity;
 
@@ -78,7 +80,7 @@ class Gather extends Job {
                 hasResource = true;
                 target = returnTo;
                 peon.rot += Math.PI;
-                boreTime = 1000;
+                boreTime = 2 * Job.BASE_BORE_TIME;
             } else if (hasResource && target.acceptsResource(resource)
                 && target.submitResource(resource)) {
                 hasResource = false;

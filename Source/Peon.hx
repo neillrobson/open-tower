@@ -1,6 +1,10 @@
 package;
 
 class Peon extends Entity {
+    static inline final BASE_SPEED = 10 * Main.SECONDS_PER_TICK;
+    static inline final MAX_WANDER_TIME = Std.int(1.5 * Main.TICKS_PER_SECOND);
+    static inline final MIN_WANDER_TIME = Std.int(0.5 * Main.TICKS_PER_SECOND);
+
     static final animSteps = [0, 1, 0, 2];
     static final animDirs = [2, 0, 3, 1];
 
@@ -33,7 +37,7 @@ class Peon extends Entity {
 
         // Calculate speed and direction.
         // If arrived at job, don't move; instead, do a job.arrived() tick
-        var speed = 1;
+        var speed = BASE_SPEED;
         if (wanderTime == 0 && job != null && job.hasTarget()) {
             var rd = job.target.r + r;
             rot = Math.atan2(job.target.y - y, job.target.x - x);
@@ -49,8 +53,8 @@ class Peon extends Entity {
         if (wanderTime > 0)
             --wanderTime;
 
-        var xt = x + Math.cos(rot) * speed * 0.4;
-        var yt = y + Math.sin(rot) * speed * 0.4;
+        var xt = x + Math.cos(rot) * speed;
+        var yt = y + Math.sin(rot) * speed;
 
         // If we can't move to the designated space, let the job know that we've
         // collided with something, and do a brief random walk to get around the
@@ -68,7 +72,8 @@ class Peon extends Entity {
                 }
             }
             rot = Math.random() * 2 * Math.PI;
-            wanderTime = Std.int(Math.random() * 30) + 3;
+            wanderTime = Std.int(Math.random() * MAX_WANDER_TIME - MIN_WANDER_TIME)
+                + MIN_WANDER_TIME;
         }
 
         moveTick += speed;
