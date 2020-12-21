@@ -1,8 +1,5 @@
 package;
 
-import openfl.events.Event;
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
 import Entity.TargetFilter;
 import openfl.geom.Point;
 import openfl.display.BitmapData;
@@ -17,7 +14,7 @@ class Island {
     private static final yStart = -60;
 
     private var game:Game;
-    private var image:BitmapData; // TODO: Remove?
+    private var image:BitmapData;
     private var tower:Tower;
 
     private var random:Random = new Random();
@@ -33,13 +30,6 @@ class Island {
         init();
     }
 
-    function onKeyDown(event:KeyboardEvent) {
-        if (event.keyCode == Keyboard.DOWN)
-            --tower.height;
-        else if (event.keyCode == Keyboard.UP)
-            ++tower.height;
-    }
-
     public function init() {
         var start = new House(xStart, yStart, HouseType.GUARDPOST, this, game.spriteSheet);
         addEntity(start);
@@ -47,11 +37,6 @@ class Island {
 
         tower = new Tower(-xStart, -yStart, this, game.spriteSheet);
         addEntity(tower);
-
-        game.addEventListener(Event.ADDED_TO_STAGE, function _added(event) {
-            game.removeEventListener(Event.ADDED_TO_STAGE, _added);
-            game.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-        });
 
         var peonCount = 0;
         while (peonCount < 10) {
