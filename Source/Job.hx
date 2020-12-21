@@ -5,6 +5,7 @@ import Resources.Resource;
 class Job {
     var island:Island;
     var peon:Peon;
+    var boreTime:Int = 500;
 
     public var target:Entity;
 
@@ -15,6 +16,11 @@ class Job {
 
     public function isValidTarget(e:Entity):Bool {
         return false;
+    }
+
+    public function update() {
+        if (boreTime > 0 && --boreTime == 0)
+            peon.job = null;
     }
 
     public function arrived() {
@@ -72,6 +78,7 @@ class Gather extends Job {
                 hasResource = true;
                 target = returnTo;
                 peon.rot += Math.PI;
+                boreTime = 1000;
             } else if (hasResource && target.acceptsResource(resource)
                 && target.submitResource(resource)) {
                 hasResource = false;
@@ -95,5 +102,15 @@ class Build extends Job {
     override function arrived() {
         if ((cast target).build())
             peon.job = null;
+    }
+}
+
+class Goto extends Job {
+    public function new(target:Entity) {
+        this.target = target;
+    }
+
+    override function isValidTarget(e:Entity):Bool {
+        return e == target;
     }
 }

@@ -28,6 +28,9 @@ class Peon extends Entity {
     override function update() {
         super.update();
 
+        if (job != null)
+            job.update();
+
         // Calculate speed and direction.
         // If arrived at job, don't move; instead, do a job.arrived() tick
         var speed = 1;

@@ -1,5 +1,6 @@
 package;
 
+import Job.Goto;
 import Job.Build;
 import Resources.Resource;
 import Job.Gather;
@@ -43,6 +44,7 @@ class House extends Entity {
     override public function update() {
         super.update();
 
+        // Find nearby peon(s) to "recruit" for this House's job
         if (!isBuilt) {
             for (_ in 0...2) {
                 var peon = getRandomPeon(100, 80);
@@ -51,12 +53,19 @@ class House extends Entity {
                 }
             }
         } else {
-            // Find a nearby peon to "recruit" for this House's job
             var peon:Peon = getRandomPeon(50, 50);
             if (peon != null) {
-                if (type == HouseType.WOODCUTTER) {
-                    peon.job = new Gather(Resource.WOOD, this);
+                switch (type) {
+                    case HouseType.WOODCUTTER:
+                        peon.job = new Gather(Resource.WOOD, this);
                 }
+            }
+
+            switch (type) {
+                case HouseType.GUARDPOST:
+                    peon = getRandomPeon(80, 80);
+                    if (peon != null && Math.random() < 0.5)
+                        peon.job = new Goto(this);
             }
         }
     }
