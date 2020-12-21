@@ -12,24 +12,19 @@ class Entity {
     public var y:Float;
     public var r:Float;
 
-    public var spriteSheet:SpriteSheet;
-    public var tile = new Tile();
+    final spriteSheet:SpriteSheet;
+    final island:Island;
 
-    var island:Island;
-    var inited = false;
+    public var tile = new Tile();
 
     public var alive = true;
 
-    public function new(x:Float, y:Float, r:Float) {
+    public function new(x:Float, y:Float, r:Float, island:Island, spriteSheet:SpriteSheet) {
         this.x = x;
         this.y = y;
         this.r = r;
-    }
-
-    public function init(island:Island, spriteSheet:SpriteSheet) {
         this.island = island;
         this.spriteSheet = spriteSheet;
-        inited = true;
     }
 
     public function updatePos(coordinateTransform:Matrix) {

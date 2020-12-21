@@ -30,7 +30,7 @@ class Island {
     }
 
     public function init() {
-        var start = new House(xStart, yStart, HouseType.GUARDPOST);
+        var start = new House(xStart, yStart, HouseType.GUARDPOST, this, game.spriteSheet);
         addEntity(start);
         start.complete();
 
@@ -38,7 +38,7 @@ class Island {
         while (peonCount < 10) {
             var x = xStart + Math.random() * 32 - 16;
             var y = yStart + Math.random() * 32 - 16;
-            var p = new Peon(x, y, 0);
+            var p = new Peon(x, y, 0, this, game.spriteSheet);
 
             if (isFree(p.x, p.y, p.r)) {
                 addEntity(p);
@@ -82,7 +82,8 @@ class Island {
         for (_ in 0...200) {
             var x = x0 + random.floatNormal() * 12;
             var y = y0 + random.floatNormal() * 12;
-            var tree = new Tree(x, y, Math.floor(Math.random() * 16 * Tree.GROW_SPEED));
+            var tree = new Tree(x, y, Math.floor(Math.random() * 16 * Tree.GROW_SPEED), this,
+                game.spriteSheet);
             if (isFree(tree.x, tree.y, tree.r)) {
                 addEntity(tree);
             }
@@ -90,7 +91,6 @@ class Island {
     }
 
     function addEntity(e:Entity) {
-        e.init(this, game.spriteSheet);
         game.entityDisplayLayer.addTile(e.tile);
         entities.push(e);
     }
@@ -132,7 +132,7 @@ class Island {
         if (!resources.canAfford(type))
             return false;
         var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
-        var house = new House(gameCoord.x, gameCoord.y, type);
+        var house = new House(gameCoord.x, gameCoord.y, type, this, game.spriteSheet);
         return isFree(house.x, house.y, house.r);
     }
 
@@ -140,7 +140,7 @@ class Island {
         if (!resources.canAfford(type))
             return;
         var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
-        var house = new House(gameCoord.x, gameCoord.y, type);
+        var house = new House(gameCoord.x, gameCoord.y, type, this, game.spriteSheet);
 
         if (isFree(house.x, house.y, house.r)) {
             addEntity(house);

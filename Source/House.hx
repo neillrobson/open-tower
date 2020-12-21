@@ -11,13 +11,9 @@ class House extends Entity {
     var buildDuration = 32 * 6;
     var isBuilt(get, null):Bool;
 
-    public function new(x:Float, y:Float, type:HouseType) {
-        super(x, y, type.radius);
+    public function new(x:Float, y:Float, type:HouseType, island:Island, spriteSheet:SpriteSheet) {
+        super(x, y, type.radius, island, spriteSheet);
         this.type = type;
-    }
-
-    public override function init(island:Island, spriteSheet:SpriteSheet) {
-        super.init(island, spriteSheet);
         tile.originX = type.anchorX;
         tile.originY = type.anchorY;
         tile.id = spriteSheet.houses[0][0].id;
@@ -71,12 +67,10 @@ class House extends Entity {
 
     function set_buildTime(buildTime:Int):Int {
         this.buildTime = buildTime;
-        if (inited) {
-            if (isBuilt) {
-                tile.id = type.getImage(spriteSheet).id;
-            } else {
-                tile.id = spriteSheet.houses[0][Math.floor(buildTime * 6 / buildDuration)].id;
-            }
+        if (isBuilt) {
+            tile.id = type.getImage(spriteSheet).id;
+        } else {
+            tile.id = spriteSheet.houses[0][Math.floor(buildTime * 6 / buildDuration)].id;
         }
         return buildTime;
     }

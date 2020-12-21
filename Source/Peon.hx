@@ -13,16 +13,14 @@ class Peon extends Entity {
     var moveTick:Float;
     var wanderTime:Int = 0;
 
-    override public function new(x:Float, y:Float, type:Int) {
-        super(x, y, 1);
+    override public function new(x:Float, y:Float, type:Int, island:Island,
+            spriteSheet:SpriteSheet) {
+        super(x, y, 1, island, spriteSheet);
         this.type = type;
 
         rot = Math.random() * 2 * Math.PI;
         moveTick = Math.random() * 12;
-    }
 
-    override function init(island:Island, spriteSheet:SpriteSheet) {
-        super.init(island, spriteSheet);
         tile.originX = 4;
         tile.originY = 8;
     }
