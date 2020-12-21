@@ -2,7 +2,6 @@ package;
 
 import openfl.geom.Point;
 import openfl.display.BitmapData;
-import haxe.ds.IntMap;
 import openfl.geom.Rectangle;
 import openfl.utils.Assets;
 import openfl.display.Tileset;
@@ -19,8 +18,6 @@ class SpriteSheet {
     public final towerMid:TileData;
     public final towerBot:TileData;
     public final deleteButton:TileData;
-
-    private var bitmapDatas:IntMap<BitmapData> = new IntMap();
 
     // public final farmPlots:Array<TileData>;
     // public final rocks:Array<TileData>;
