@@ -82,3 +82,18 @@ class Gather extends Job {
         }
     }
 }
+
+class Build extends Job {
+    public function new(target:House) {
+        this.target = target;
+    }
+
+    override function isValidTarget(e:Entity):Bool {
+        return e == target;
+    }
+
+    override function arrived() {
+        if ((cast target).build())
+            peon.job = null;
+    }
+}

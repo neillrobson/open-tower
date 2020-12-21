@@ -30,7 +30,9 @@ class Island {
     }
 
     public function init() {
-        addEntity(new House(xStart, yStart, HouseType.GUARDPOST));
+        var start = new House(xStart, yStart, HouseType.GUARDPOST);
+        addEntity(start);
+        start.complete();
 
         var peonCount = 0;
         while (peonCount < 10) {
