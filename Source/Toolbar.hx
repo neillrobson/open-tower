@@ -10,6 +10,11 @@ import openfl.text.TextField;
 import openfl.display.Sprite;
 
 class Toolbar extends Sprite {
+    static inline final MARGIN = 2;
+    static inline final LINE_HEIGHT = 12;
+    static inline final HOUSE_BUTTON_SIDE = 20;
+    static inline final HOUSE_BUTTON_PADDING = 2;
+
     var game:Game;
 
     var timeText:TextField;
@@ -20,6 +25,8 @@ class Toolbar extends Sprite {
     var foodText:TextField;
 
     var selectedHouseMarker:Shape;
+    var houseCost:TextField;
+    var houseDesc:TextField;
 
     public function new(width:Int, height:Int, game:Game) {
         super();
@@ -29,7 +36,6 @@ class Toolbar extends Sprite {
 
     function init(width, height) {
         addEventListener(ToolbarEvent.HOUSE_SELECT, onHouseSelect);
-        var margin = 2;
 
         graphics.beginFill(0x87ADFF);
         graphics.drawRect(0, 0, width, height);
@@ -39,24 +45,24 @@ class Toolbar extends Sprite {
         var textFormat = new TextFormat(font.fontName, 8, 0xFFFFFF, true);
 
         timeText = new TextField();
-        timeText.x = margin;
-        timeText.y = margin;
+        timeText.x = MARGIN;
+        timeText.y = MARGIN;
         timeText.defaultTextFormat = textFormat;
         timeText.selectable = false;
         addChild(timeText);
 
         populationText = new TextField();
         populationText.text = "Population: 10 / 10";
-        populationText.x = margin;
-        populationText.y = margin + 12;
+        populationText.x = MARGIN;
+        populationText.y = MARGIN + LINE_HEIGHT;
         populationText.defaultTextFormat = textFormat;
         populationText.selectable = false;
         addChild(populationText);
 
         warriorText = new TextField();
         warriorText.text = "Warriors: 0 / 0";
-        warriorText.x = margin;
-        warriorText.y = margin + 24;
+        warriorText.x = MARGIN;
+        warriorText.y = MARGIN + 2 * LINE_HEIGHT;
         warriorText.defaultTextFormat = textFormat;
         warriorText.selectable = false;
         addChild(warriorText);
@@ -65,40 +71,39 @@ class Toolbar extends Sprite {
         woodText.text = "Wood: 9999";
         woodText.defaultTextFormat = textFormat;
         woodText.selectable = false;
-        woodText.x = game.width - woodText.textWidth - 8;
-        woodText.y = margin;
+        woodText.x = game.width - woodText.textWidth - MARGIN;
+        woodText.y = MARGIN;
         addChild(woodText);
 
         rockText = new TextField();
         rockText.text = "Rock: 9999";
         rockText.defaultTextFormat = textFormat;
         rockText.selectable = false;
-        rockText.x = game.width - rockText.textWidth - 8;
-        rockText.y = margin + 12;
+        rockText.x = game.width - rockText.textWidth - MARGIN;
+        rockText.y = MARGIN + LINE_HEIGHT;
         addChild(rockText);
 
         foodText = new TextField();
         foodText.text = "Food: 9999";
         foodText.defaultTextFormat = textFormat;
         foodText.selectable = false;
-        foodText.x = game.width - foodText.textWidth - 8;
-        foodText.y = margin + 24;
+        foodText.x = game.width - foodText.textWidth - MARGIN;
+        foodText.y = MARGIN + 2 * LINE_HEIGHT;
         addChild(foodText);
 
         var spriteSheet = game.spriteSheet;
 
         for (i in -1...HouseType.houseTypes.length) {
             var x = getHouseXCoord(i);
-            var y = 2;
 
             var houseButton = new Sprite();
             houseButton.x = x;
-            houseButton.y = y;
+            houseButton.y = MARGIN;
 
             // Give the button a full twenty-pixel square size
             var boundingBox = new Shape();
             boundingBox.graphics.beginFill(0, 0);
-            boundingBox.graphics.drawRect(0, 0, 20, 20);
+            boundingBox.graphics.drawRect(0, 0, HOUSE_BUTTON_SIDE, HOUSE_BUTTON_SIDE);
             houseButton.addChild(boundingBox);
 
             var img;
@@ -107,7 +112,7 @@ class Toolbar extends Sprite {
             } else {
                 img = new Bitmap(HouseType.houseTypes[i].getImage(spriteSheet).bitmapData);
             }
-            img.x = img.y = 2;
+            img.x = img.y = HOUSE_BUTTON_PADDING;
             houseButton.addChild(img);
             houseButton.addEventListener(MouseEvent.CLICK,
                 event -> dispatchEvent(new ToolbarEvent(ToolbarEvent.HOUSE_SELECT, i)));
@@ -115,16 +120,32 @@ class Toolbar extends Sprite {
         }
 
         selectedHouseMarker = new Shape();
-        selectedHouseMarker.y = 2;
+        selectedHouseMarker.y = MARGIN;
         selectedHouseMarker.graphics.lineStyle(1, 0xFFFFFF);
-        selectedHouseMarker.graphics.drawRect(0, 0, 20, 20);
+        selectedHouseMarker.graphics.drawRect(0, 0, HOUSE_BUTTON_SIDE, HOUSE_BUTTON_SIDE);
         addChild(selectedHouseMarker);
+
+        houseCost = new TextField();
+        houseCost.text = "Sell Building";
+        houseCost.defaultTextFormat = textFormat;
+        houseCost.selectable = false;
+        houseCost.y = MARGIN + 2 * LINE_HEIGHT;
+        addChild(houseCost);
+
+        houseDesc = new TextField();
+        houseDesc.text = "Returns 75% of wood and rock used";
+        houseDesc.defaultTextFormat = textFormat;
+        houseDesc.selectable = false;
+        houseDesc.y = MARGIN + 3 * LINE_HEIGHT;
+        addChild(houseDesc);
 
         dispatchEvent(new ToolbarEvent(ToolbarEvent.HOUSE_SELECT, -1));
     }
 
     private function getHouseXCoord(type):Int {
-        return (type + 1) * 20 + Std.int((width - (HouseType.houseTypes.length + 1) * 20) / 2);
+        return (type
+            + 1) * HOUSE_BUTTON_SIDE
+            + Std.int((width - (HouseType.houseTypes.length + 1) * HOUSE_BUTTON_SIDE) / 2);
     }
 
     public function update() {
@@ -147,5 +168,20 @@ class Toolbar extends Sprite {
 
     function onHouseSelect(event:ToolbarEvent) {
         selectedHouseMarker.x = getHouseXCoord(event.selection);
+
+        if (event.selection >= 0) {
+            var type = HouseType.houseTypes[event.selection];
+
+            houseCost.text = type.getCostString();
+            houseDesc.text = type.getDescription();
+        } else {
+            houseCost.text = "Sell Building";
+            houseDesc.text = "Returns 75% of wood and rock used";
+        }
+
+        houseCost.width = houseCost.textWidth;
+        houseDesc.width = houseDesc.textWidth;
+        houseCost.x = selectedHouseMarker.x + HOUSE_BUTTON_SIDE / 2 - houseCost.textWidth / 2;
+        houseDesc.x = selectedHouseMarker.x + HOUSE_BUTTON_SIDE / 2 - houseDesc.textWidth / 2;
     }
 }

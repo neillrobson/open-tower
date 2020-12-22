@@ -44,4 +44,26 @@ class HouseType {
     public function getImage(spriteSheet:SpriteSheet) {
         return spriteSheet.houses[spriteIndex % 2 + 1][Std.int(spriteIndex / 2)];
     }
+
+    public function getCostString() {
+        var ret = '$name [';
+        ret += '${wood > 0 ? ' wood: $wood' : ''}';
+        ret += '${rock > 0 ? ' rock: $rock' : ''}';
+        ret += '${food > 0 ? ' food: $food' : ''}';
+        ret += ' ]';
+        return ret;
+    }
+
+    public function getDescription() {
+        switch (this) {
+            case MASON:
+                return "Gathers nearby stones; produces rock";
+            case WOODCUTTER:
+                return "Cuts down nearby trees; produces wood";
+            case GUARDPOST:
+                return "Peons generally stay near these";
+            default:
+                return "**unknown**";
+        }
+    }
 }
