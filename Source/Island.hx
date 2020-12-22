@@ -50,6 +50,18 @@ class Island {
             }
         }
 
+        for (_ in 0...7) {
+            var x = Math.random() * 256 - 128;
+            var y = Math.random() * 256 - 128;
+            if (x > 0 && y < 0) {
+                if (Math.random() < 0.5)
+                    x = -x;
+                else
+                    y = -y;
+            }
+            addRocks(x, y);
+        }
+
         for (_ in 0...20) {
             var x = Math.random() * 256 - 128;
             var y = Math.random() * 256 - 128;
@@ -90,6 +102,17 @@ class Island {
                 game.spriteSheet);
             if (isFree(tree.x, tree.y, tree.r)) {
                 addEntity(tree);
+            }
+        }
+    }
+
+    function addRocks(x0:Float, y0:Float) {
+        for (_ in 0...100) {
+            var x = x0 + random.floatNormal() * 6;
+            var y = y0 + random.floatNormal() * 6;
+            var rock = new Rock(x, y, this, game.spriteSheet);
+            if (isFree(rock.x, rock.y, rock.r)) {
+                addEntity(rock);
             }
         }
     }

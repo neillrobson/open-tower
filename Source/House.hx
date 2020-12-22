@@ -59,7 +59,9 @@ class House extends Entity {
             if (peon != null) {
                 switch (type) {
                     case HouseType.WOODCUTTER:
-                        peon.job = new Gather(Resource.WOOD, this);
+                        peon.job = new Gather(WOOD, this);
+                    case HouseType.MASON:
+                        peon.job = new Gather(ROCK, this);
                 }
             }
 

@@ -12,6 +12,7 @@ class SpriteSheet {
     public final tileset:Tileset;
 
     public final trees:Array<TileData>;
+    public final rocks:Array<TileData>;
     public final houses:Array<Array<TileData>>;
     public final peons:Array<Array<TileData>>;
     public final towerTop:TileData;
@@ -20,7 +21,6 @@ class SpriteSheet {
     public final deleteButton:TileData;
 
     // public final farmPlots:Array<TileData>;
-    // public final rocks:Array<TileData>;
     // public final carriedResources:Array<TileData>;
     // public final smoke:Array<TileData>;
     // public final infoPuffs:Array<TileData>;
@@ -37,6 +37,11 @@ class SpriteSheet {
         trees = new Array();
         for (i in 0...16) {
             trees[i] = makeTileData(new Rectangle(32 + 8 * i, 0, 8, 16));
+        }
+
+        rocks = [];
+        for (i in 0...4) {
+            rocks[i] = makeTileData(new Rectangle(32 + 8 * (12 + i), 16, 8, 8));
         }
 
         houses = new Array();

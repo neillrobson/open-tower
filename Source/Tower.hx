@@ -1,15 +1,20 @@
 package;
 
+import Resources.Resource;
 import openfl.display.Tile;
 import openfl.display.TileContainer;
 
 class Tower extends Entity {
+    static inline final STANIMA_PER_LEVEL = 4096;
+
     var container = new TileContainer();
     var towerMids:Array<Tile> = [];
     var towerTopWall:Tile;
     var towerTop:Tile;
 
     public var height(default, set):Int;
+
+    var stanima = STANIMA_PER_LEVEL;
 
     override public function new(x:Float, y:Float, island:Island, spriteSheet:SpriteSheet) {
         super(x, y, 16, island, spriteSheet);
@@ -27,8 +32,20 @@ class Tower extends Entity {
         height = 80;
     }
 
-    override function render() {
-        super.render();
+    override function givesResource(r:Resource):Bool {
+        return r == ROCK;
+    }
+
+    override function gatherResource(r:Resource):Bool {
+        stanima -= 64;
+        if (stanima <= 0) {
+            stanima += STANIMA_PER_LEVEL;
+            if (--height <= 4) {
+                alive = false;
+            }
+            return true;
+        }
+        return false;
     }
 
     function set_height(height:Int) {
