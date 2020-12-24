@@ -54,6 +54,10 @@ class Job {
     }
 
     public function cantReach() {}
+
+    public function getCarried():Resource {
+        return null;
+    }
 }
 
 class Gather extends Job {
@@ -89,6 +93,10 @@ class Gather extends Job {
                 peon.job = null;
             }
         }
+    }
+
+    override function getCarried():Resource {
+        return hasResource ? resource : null;
     }
 }
 

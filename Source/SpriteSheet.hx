@@ -19,9 +19,9 @@ class SpriteSheet {
     public final towerMid:TileData;
     public final towerBot:TileData;
     public final deleteButton:TileData;
+    public final carriedResources:Array<TileData>;
 
     // public final farmPlots:Array<TileData>;
-    // public final carriedResources:Array<TileData>;
     // public final smoke:Array<TileData>;
     // public final infoPuffs:Array<TileData>;
     // public final helpButton:TileData;
@@ -61,6 +61,11 @@ class SpriteSheet {
         }
 
         deleteButton = makeTileData(new Rectangle(32 + 16 * 8 + 3 * 16, 0, 16, 16));
+
+        carriedResources = new Array();
+        for (i in 0...4) {
+            carriedResources[i] = makeTileData(new Rectangle(32 + (12 + i) * 8, 4 * 8, 8, 8));
+        }
     }
 
     private function makeTileData(rect:Rectangle):TileData {

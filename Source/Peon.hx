@@ -1,5 +1,8 @@
 package;
 
+import openfl.display.Tile;
+import openfl.display.TileContainer;
+
 class Peon extends Entity {
     static inline final BASE_SPEED = 10 * Main.SECONDS_PER_TICK;
     static inline final MAX_WANDER_TIME = Std.int(1.5 * Main.TICKS_PER_SECOND);
@@ -7,6 +10,10 @@ class Peon extends Entity {
 
     static final animSteps = [0, 1, 0, 2];
     static final animDirs = [2, 0, 3, 1];
+
+    var container = new TileContainer();
+    var body = new Tile();
+    var carried = new Tile();
 
     public var job(default, set):Job;
 
@@ -21,6 +28,12 @@ class Peon extends Entity {
             spriteSheet:SpriteSheet) {
         super(x, y, 1, island, spriteSheet);
         this.type = type;
+
+        tile = container;
+        container.addTile(body);
+        container.addTile(carried);
+        carried.y = -3;
+        carried.alpha = 0;
 
         rot = Math.random() * 2 * Math.PI;
         moveTick = Math.random() * 12;
@@ -90,7 +103,20 @@ class Peon extends Entity {
         var rotStep = mod(Math.round(4 * (rot + island.rot) / (2 * Math.PI)), 4);
         var animStep = animSteps[mod(Math.floor(moveTick / 4), 4)];
 
-        tile.id = spriteSheet.peons[type][animDirs[rotStep] * 3 + animStep].id;
+        body.id = spriteSheet.peons[type][animDirs[rotStep] * 3 + animStep].id;
+
+        var carriedRes = job != null ? job.getCarried() : null;
+        if (carriedRes != null) {
+            switch (carriedRes) {
+                case WOOD:
+                    carried.id = spriteSheet.carriedResources[0].id;
+                case ROCK:
+                    carried.id = spriteSheet.carriedResources[1].id;
+            }
+            carried.alpha = 1;
+        } else {
+            carried.alpha = 0;
+        }
     }
 
     function set_job(job:Job):Job {
