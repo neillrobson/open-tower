@@ -1,5 +1,6 @@
 package;
 
+import openfl.events.MouseEvent;
 import Entity.TargetFilter;
 import openfl.geom.Point;
 import openfl.display.BitmapData;
@@ -21,6 +22,8 @@ class Island {
     private var tower:Tower;
 
     private var random:Random = new Random();
+
+    public var won = false;
 
     public var rot:Float;
 
@@ -85,6 +88,13 @@ class Island {
             }
             addForest(x, y);
         }
+
+        #if debug
+        game.addEventListener(MouseEvent.RIGHT_CLICK, event -> {
+            while (!tower.gatherResource(ROCK))
+                continue;
+        });
+        #end
     }
 
     public function update() {
@@ -93,6 +103,11 @@ class Island {
             if (!e.alive) {
                 removeEntity(e);
             }
+        }
+
+        if (won) {
+            won = false;
+            game.win();
         }
     }
 

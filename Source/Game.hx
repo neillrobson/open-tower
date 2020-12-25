@@ -27,6 +27,7 @@ class Game extends Sprite {
     public var pauseTime(default, null) = 0.0;
 
     var titleScreen(default, set) = true;
+    var won(default, set) = false;
 
     var isMouseOver = false;
     var scrolling = false;
@@ -43,6 +44,10 @@ class Game extends Sprite {
 
     var logo:Bitmap;
     var titleText:TextField;
+
+    var wonScreen:Bitmap;
+    var scoreText:TextField;
+    var continueText:TextField;
 
     var selectedHouseType:HouseType;
     var cursor:Tile;
@@ -81,6 +86,10 @@ class Game extends Sprite {
         logo.y = 16;
         addChild(logo);
 
+        wonScreen = new Bitmap(Assets.getBitmapData('assets/winscreen.png'));
+        wonScreen.x = (WIDTH - wonScreen.bitmapData.width) / 2;
+        wonScreen.y = 16;
+
         var font = Assets.getFont('assets/nokiafc22.ttf');
         var textFormat = new TextFormat(font.fontName, 8, 0xFFFFFF, true);
 
@@ -93,6 +102,23 @@ class Game extends Sprite {
         titleText.y = HEIGHT - 16;
         addChild(titleText);
 
+        scoreText = new TextField();
+        scoreText.text = "Score: 99999";
+        scoreText.defaultTextFormat = textFormat;
+        scoreText.selectable = false;
+        scoreText.width = scoreText.textWidth;
+        scoreText.height = scoreText.textHeight;
+        scoreText.x = (WIDTH - scoreText.width) / 2;
+        scoreText.y = (HEIGHT - scoreText.height) / 2;
+
+        continueText = new TextField();
+        continueText.text = "Click to continue playing";
+        continueText.defaultTextFormat = textFormat;
+        continueText.selectable = false;
+        continueText.width = continueText.textWidth;
+        continueText.x = (WIDTH - continueText.width) / 2;
+        continueText.y = HEIGHT - 16;
+
         island = new Island(this, islandBitmapData);
 
         // Don't add cursor yet; we're starting on title screen
@@ -101,10 +127,11 @@ class Game extends Sprite {
     }
 
     public function update() {
-        if (titleScreen) {
+        if (titleScreen || won) {
             pauseTime += Main.SECONDS_PER_TICK;
 
             titleText.alpha = Std.int(pauseTime * 2) % 2;
+            continueText.alpha = Std.int(pauseTime * 2) % 2;
         } else {
             gameTime += Main.SECONDS_PER_TICK;
 
@@ -120,7 +147,7 @@ class Game extends Sprite {
         islandRotation += islandRotationSpeed * Main.SECONDS_PER_TICK;
         islandRotationSpeed += islandRotationAcceleration * Main.SECONDS_PER_TICK;
 
-        if (titleScreen) {
+        if (titleScreen || won) {
             islandRotationAcceleration = 1.2;
         } else {
             if (scrolling) {
@@ -181,7 +208,7 @@ class Game extends Sprite {
     }
 
     function updateCursor() {
-        if (!titleScreen) {
+        if (!(titleScreen || won)) {
             if (selectedHouseType != null) {
                 if (island.canPlaceHouse(mouseX, mouseY, selectedHouseType)) {
                     cursor.x = mouseX - selectedHouseType.anchorX;
@@ -226,6 +253,11 @@ class Game extends Sprite {
             return;
         }
 
+        if (won) {
+            won = false;
+            return;
+        }
+
         if (selectedHouseType != null) {
             island.placeHouse(mouseX, mouseY, selectedHouseType);
         } else {
@@ -260,5 +292,27 @@ class Game extends Sprite {
         }
 
         return titleScreen = ts;
+    }
+
+    function set_won(won:Bool):Bool {
+        if (won) {
+            removeChild(toolbar);
+            entityDisplayLayer.removeTile(cursor);
+            addChild(wonScreen);
+            addChild(scoreText);
+            addChild(continueText);
+        } else {
+            addChild(toolbar);
+            entityDisplayLayer.addTile(cursor);
+            removeChild(wonScreen);
+            removeChild(scoreText);
+            removeChild(continueText);
+        }
+        return this.won = won;
+    }
+
+    public function win() {
+        scoreText.text = 'Score: ${Math.round(10000 * 60 / gameTime)}';
+        won = true;
     }
 }

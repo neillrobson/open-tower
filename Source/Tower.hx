@@ -84,6 +84,11 @@ class Tower extends Entity {
         return false;
     }
 
+    override function die() {
+        super.die();
+        island.won = true;
+    }
+
     function set_height(height:Int) {
         var numMids = Std.int(height / 8);
         var oldNumMids = Std.int(this.height / 8);
