@@ -1,5 +1,7 @@
 package;
 
+import openfl.display.Tile;
+import openfl.display.TileContainer;
 import Job.Goto;
 import Job.Build;
 import Resources.Resource;
@@ -11,25 +13,28 @@ class House extends Entity {
 
     final type:HouseType;
 
+    var container = new TileContainer();
+    var houseSprite = new Tile();
+    var puffs:Array<Puff> = [];
+
     var buildTime(default, set) = 0;
     var isBuilt(get, null):Bool;
 
     public function new(x:Float, y:Float, type:HouseType, island:Island, spriteSheet:SpriteSheet) {
         super(x, y, type.radius, island, spriteSheet);
         this.type = type;
+
+        tile = container;
         tile.originX = type.anchorX;
         tile.originY = type.anchorY;
-        tile.id = spriteSheet.houses[0][0].id;
+
+        houseSprite.id = spriteSheet.houses[0][0].id;
+        container.addTile(houseSprite);
     }
 
     public function build():Bool {
-        if (!isBuilt) {
+        if (!isBuilt)
             ++buildTime;
-            if (isBuilt) {
-                // TODO: Set new population caps, HP, etc.
-                return true;
-            }
-        }
         return isBuilt;
     }
 
@@ -45,6 +50,13 @@ class House extends Entity {
 
     override public function update() {
         super.update();
+
+        for (p in puffs) {
+            p.update();
+            if (!p.alive) {
+                unpuff(p);
+            }
+        }
 
         // Find nearby peon(s) to "recruit" for this House's job
         if (!isBuilt) {
@@ -74,6 +86,12 @@ class House extends Entity {
         }
     }
 
+    override function render() {
+        super.render();
+        for (p in puffs)
+            p.render();
+    }
+
     inline function get_isBuilt():Bool {
         return buildTime >= BUILD_DURATION;
     }
@@ -81,9 +99,9 @@ class House extends Entity {
     function set_buildTime(buildTime:Int):Int {
         this.buildTime = buildTime;
         if (isBuilt) {
-            tile.id = type.getImage(spriteSheet).id;
+            houseSprite.id = type.getImage(spriteSheet).id;
         } else {
-            tile.id = spriteSheet.houses[0][Math.floor(buildTime * BUILD_ANIMATION_STEPS / BUILD_DURATION)].id;
+            houseSprite.id = spriteSheet.houses[0][Math.floor(buildTime * BUILD_ANIMATION_STEPS / BUILD_DURATION)].id;
         }
         return buildTime;
     }
@@ -106,6 +124,21 @@ class House extends Entity {
     }
 
     override function submitResource(r:Resource):Bool {
-        return buildTime >= BUILD_DURATION && type.acceptResource == r;
+        if (buildTime >= BUILD_DURATION && type.acceptResource == r) {
+            puff();
+            return true;
+        }
+        return false;
+    }
+
+    function puff() {
+        var p = new Puff(8, 6, island, spriteSheet);
+        puffs.push(p);
+        container.addTile(p.tile);
+    }
+
+    function unpuff(p:Puff) {
+        puffs.remove(p);
+        container.removeTile(p.tile);
     }
 }

@@ -20,9 +20,9 @@ class SpriteSheet {
     public final towerBot:TileData;
     public final deleteButton:TileData;
     public final carriedResources:Array<TileData>;
+    public final smoke:Array<TileData>;
 
     // public final farmPlots:Array<TileData>;
-    // public final smoke:Array<TileData>;
     // public final infoPuffs:Array<TileData>;
     // public final helpButton:TileData;
     // public final soundButtons:Array<TileData>;
@@ -65,6 +65,11 @@ class SpriteSheet {
         carriedResources = new Array();
         for (i in 0...4) {
             carriedResources[i] = makeTileData(new Rectangle(32 + (12 + i) * 8, 4 * 8, 8, 8));
+        }
+
+        smoke = new Array();
+        for (i in 0...5) {
+            smoke[i] = makeTileData(new Rectangle(256 - 8, 8 * i, 8, 8));
         }
     }
 
