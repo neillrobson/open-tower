@@ -118,12 +118,12 @@ class Island {
     }
 
     function addEntity(e:Entity) {
-        game.entityDisplayLayer.addTile(e.tile);
+        game.entityDisplayLayer.addTile(e.sprite);
         entities.push(e);
     }
 
     function removeEntity(e:Entity) {
-        game.entityDisplayLayer.removeTile(e.tile);
+        game.entityDisplayLayer.removeTile(e.sprite);
         entities.remove(e);
     }
 

@@ -11,9 +11,9 @@ class Rock extends Entity {
     public function new(x:Float, y:Float, island:Island, spriteSheet:SpriteSheet) {
         super(x, y, 5, island, spriteSheet);
 
-        tile.originX = 4;
-        tile.originY = 6;
-        tile.id = spriteSheet.rocks[Std.int(Math.random() * 4)].id;
+        sprite.originX = 4;
+        sprite.originY = 6;
+        sprite.id = spriteSheet.rocks[Std.int(Math.random() * 4)].id;
     }
 
     override function gatherResource(r:Resource):Bool {

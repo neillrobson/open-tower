@@ -14,8 +14,8 @@ class Puff extends Entity {
         super(x, y, -1, island, spriteSheet);
         lifeTime = 3 + Math.random() * 2;
 
-        tile.originX = 4;
-        tile.originY = 4;
+        sprite.originX = 4;
+        sprite.originY = 4;
     }
 
     override function update() {
@@ -34,13 +34,13 @@ class Puff extends Entity {
     override function render() {
         super.render();
 
-        tile.x = x;
-        tile.y = y - z;
+        sprite.x = x;
+        sprite.y = y - z;
 
         var age = Std.int(life * 6 / lifeTime);
         if (age <= 4)
-            tile.id = spriteSheet.smoke[age].id;
+            sprite.id = spriteSheet.smoke[age].id;
         else
-            tile.alpha = 0;
+            sprite.alpha = 0;
     }
 }

@@ -15,8 +15,8 @@ class Tree extends Entity {
     public function new(x:Float, y:Float, age:Int, island:Island, spriteSheet:SpriteSheet) {
         super(x, y, 4, island, spriteSheet);
         this.age = age;
-        tile.originX = 4;
-        tile.originY = 16;
+        sprite.originX = 4;
+        sprite.originY = 16;
     }
 
     override public function update() {
@@ -26,7 +26,7 @@ class Tree extends Entity {
     }
 
     function set_age(newAge:Int) {
-        tile.id = spriteSheet.trees[15 - Std.int(newAge / GROW_SPEED)].id;
+        sprite.id = spriteSheet.trees[15 - Std.int(newAge / GROW_SPEED)].id;
         return age = newAge;
     }
 

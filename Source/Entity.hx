@@ -1,9 +1,9 @@
 package;
 
+import openfl.display.TileContainer;
 import Resources.Resource;
 import openfl.geom.Point;
 import openfl.geom.Matrix;
-import openfl.display.Tile;
 
 typedef TargetFilter = Entity->Bool;
 
@@ -15,7 +15,7 @@ class Entity {
     final spriteSheet:SpriteSheet;
     final island:Island;
 
-    public var tile = new Tile();
+    public var sprite = new TileContainer();
 
     public var alive = true;
 
@@ -29,8 +29,8 @@ class Entity {
 
     public function updatePos(coordinateTransform:Matrix) {
         var newPoint = coordinateTransform.transformPoint(new Point(x, y));
-        tile.x = newPoint.x;
-        tile.y = newPoint.y;
+        sprite.x = newPoint.x;
+        sprite.y = newPoint.y;
     }
 
     public function update() {}

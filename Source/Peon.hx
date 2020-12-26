@@ -2,7 +2,6 @@ package;
 
 import event.JobEvent;
 import openfl.display.Tile;
-import openfl.display.TileContainer;
 
 class Peon extends Entity {
     static inline final BASE_SPEED = 10 * Main.SECONDS_PER_TICK;
@@ -12,7 +11,6 @@ class Peon extends Entity {
     static final animSteps = [0, 1, 0, 2];
     static final animDirs = [2, 0, 3, 1];
 
-    var container = new TileContainer();
     var body = new Tile();
     var carried = new Tile();
 
@@ -30,17 +28,16 @@ class Peon extends Entity {
         super(x, y, 1, island, spriteSheet);
         this.type = type;
 
-        tile = container;
-        container.addTile(body);
-        container.addTile(carried);
+        sprite.addTile(body);
+        sprite.addTile(carried);
         carried.y = -3;
         carried.alpha = 0;
 
         rot = Math.random() * 2 * Math.PI;
         moveTick = Math.random() * 12;
 
-        tile.originX = 4;
-        tile.originY = 8;
+        sprite.originX = 4;
+        sprite.originY = 8;
     }
 
     override function update() {

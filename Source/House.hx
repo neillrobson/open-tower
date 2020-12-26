@@ -1,7 +1,6 @@
 package;
 
 import openfl.display.Tile;
-import openfl.display.TileContainer;
 import Job.Goto;
 import Job.Build;
 import Resources.Resource;
@@ -13,7 +12,6 @@ class House extends Entity {
 
     final type:HouseType;
 
-    var container = new TileContainer();
     var houseSprite = new Tile();
     var puffs:Array<Puff> = [];
 
@@ -24,12 +22,11 @@ class House extends Entity {
         super(x, y, type.radius, island, spriteSheet);
         this.type = type;
 
-        tile = container;
-        tile.originX = type.anchorX;
-        tile.originY = type.anchorY;
+        sprite.originX = type.anchorX;
+        sprite.originY = type.anchorY;
 
         houseSprite.id = spriteSheet.houses[0][0].id;
-        container.addTile(houseSprite);
+        sprite.addTile(houseSprite);
     }
 
     public function build():Bool {
@@ -134,11 +131,11 @@ class House extends Entity {
     function puff() {
         var p = new Puff(8, 6, island, spriteSheet);
         puffs.push(p);
-        container.addTile(p.tile);
+        sprite.addTile(p.sprite);
     }
 
     function unpuff(p:Puff) {
         puffs.remove(p);
-        container.removeTile(p.tile);
+        sprite.removeTile(p.sprite);
     }
 }
