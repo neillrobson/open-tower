@@ -1,5 +1,6 @@
 package;
 
+import event.JobEvent;
 import openfl.display.Tile;
 import openfl.display.TileContainer;
 
@@ -104,10 +105,20 @@ class Peon extends Entity {
         var animStep = animSteps[mod(Math.floor(moveTick / 4), 4)];
 
         body.id = spriteSheet.peons[type][animDirs[rotStep] * 3 + animStep].id;
+    }
 
-        var carriedRes = job != null ? job.getCarried() : null;
-        if (carriedRes != null) {
-            switch (carriedRes) {
+    function set_job(job:Job):Job {
+        if (this.job != null)
+            this.job.removeEventListener(JobEvent.CHANGE_CARRIED, onChangeCarried);
+        if (job != null)
+            job.addEventListener(JobEvent.CHANGE_CARRIED, onChangeCarried);
+
+        return this.job = job;
+    }
+
+    function onChangeCarried(event:JobEvent) {
+        if (event.carried != null) {
+            switch (event.carried) {
                 case WOOD:
                     carried.id = spriteSheet.carriedResources[0].id;
                 case ROCK:
@@ -119,12 +130,5 @@ class Peon extends Entity {
         } else {
             carried.alpha = 0;
         }
-    }
-
-    function set_job(job:Job):Job {
-        this.job = job;
-        if (job != null)
-            job.init(island, this);
-        return job;
     }
 }

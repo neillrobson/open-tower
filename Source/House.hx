@@ -63,7 +63,7 @@ class House extends Entity {
             for (_ in 0...2) {
                 var peon = getRandomPeon(100, 80);
                 if (peon != null) {
-                    peon.job = new Build(this);
+                    peon.job = new Build(island, peon, this);
                 }
             }
         } else {
@@ -71,9 +71,9 @@ class House extends Entity {
             if (peon != null) {
                 switch (type) {
                     case HouseType.WOODCUTTER:
-                        peon.job = new Gather(WOOD, this);
+                        peon.job = new Gather(island, peon, WOOD, this);
                     case HouseType.MASON:
-                        peon.job = new Gather(ROCK, this);
+                        peon.job = new Gather(island, peon, ROCK, this);
                 }
             }
 
@@ -81,7 +81,7 @@ class House extends Entity {
                 case HouseType.GUARDPOST:
                     peon = getRandomPeon(80, 80);
                     if (peon != null && Math.random() < 0.5)
-                        peon.job = new Goto(this);
+                        peon.job = new Goto(island, peon, this);
             }
         }
     }

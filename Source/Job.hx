@@ -1,8 +1,10 @@
 package;
 
+import event.JobEvent;
+import openfl.events.EventDispatcher;
 import Resources.Resource;
 
-class Job {
+class Job extends EventDispatcher {
     static inline final BASE_BORE_TIME = 16 * Main.TICKS_PER_SECOND;
 
     var island:Island;
@@ -11,7 +13,9 @@ class Job {
 
     public var target:Entity;
 
-    public function init(island:Island, peon:Peon) {
+    public function new(island:Island, peon:Peon) {
+        super();
+
         this.island = island;
         this.peon = peon;
     }
@@ -54,10 +58,6 @@ class Job {
     }
 
     public function cantReach() {}
-
-    public function getCarried():Resource {
-        return null;
-    }
 }
 
 class Gather extends Job {
@@ -65,7 +65,8 @@ class Gather extends Job {
     var resource:Resource;
     var returnTo:House;
 
-    public function new(resource:Resource, returnTo:House) {
+    public function new(island:Island, peon:Peon, resource:Resource, returnTo:House) {
+        super(island, peon);
         this.resource = resource;
         this.returnTo = returnTo;
     }
@@ -82,26 +83,25 @@ class Gather extends Job {
         if (target != null) {
             if (!hasResource && target.givesResource(resource) && target.gatherResource(resource)) {
                 hasResource = true;
+                dispatchEvent(new JobEvent(JobEvent.CHANGE_CARRIED, resource));
                 target = returnTo;
                 peon.rot += Math.PI;
                 boreTime = 2 * Job.BASE_BORE_TIME;
             } else if (hasResource && target.acceptsResource(resource)
                 && target.submitResource(resource)) {
                 hasResource = false;
+                dispatchEvent(new JobEvent(JobEvent.CHANGE_CARRIED, null));
                 target = null;
                 island.resources.add(resource, 1);
                 peon.job = null;
             }
         }
     }
-
-    override function getCarried():Resource {
-        return hasResource ? resource : null;
-    }
 }
 
 class Build extends Job {
-    public function new(target:House) {
+    public function new(island:Island, peon:Peon, target:House) {
+        super(island, peon);
         this.target = target;
     }
 
@@ -116,7 +116,8 @@ class Build extends Job {
 }
 
 class Goto extends Job {
-    public function new(target:Entity) {
+    public function new(island:Island, peon:Peon, target:Entity) {
+        super(island, peon);
         this.target = target;
     }
 
