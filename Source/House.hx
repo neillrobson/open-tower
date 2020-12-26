@@ -50,7 +50,7 @@ class House extends Entity {
 
         for (p in puffs) {
             p.update();
-            if (!p.alive) {
+            if (!p.alive()) {
                 unpuff(p);
             }
         }
@@ -81,12 +81,6 @@ class House extends Entity {
                         peon.job = new Goto(island, peon, this);
             }
         }
-    }
-
-    override function render() {
-        super.render();
-        for (p in puffs)
-            p.render();
     }
 
     inline function get_isBuilt():Bool {
@@ -129,13 +123,13 @@ class House extends Entity {
     }
 
     function puff() {
-        var p = new Puff(8, 6, island, spriteSheet);
+        var p = new Puff(11, 3, spriteSheet);
         puffs.push(p);
-        sprite.addTile(p.sprite);
+        sprite.addTile(p.tile);
     }
 
     function unpuff(p:Puff) {
         puffs.remove(p);
-        sprite.removeTile(p.sprite);
+        sprite.removeTile(p.tile);
     }
 }

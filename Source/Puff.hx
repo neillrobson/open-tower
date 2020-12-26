@@ -1,46 +1,48 @@
 package;
 
-class Puff extends Entity {
+import openfl.display.Tile;
+
+class Puff {
+    public var tile = new Tile();
+
+    final spriteSheet:SpriteSheet;
+
     final lifeTime:Float;
     var life = 0.0;
 
-    var xSpeed = 1.0;
+    final xSpeed = 1.0;
 
-    var z = 0.0;
-    var zSpeed = 9.0;
-    var zAccel = 0.0;
+    var ySpeed = -9.0;
+    var yAccel = 0.0;
 
-    override public function new(x:Float, y:Float, island:Island, spriteSheet:SpriteSheet) {
-        super(x, y, -1, island, spriteSheet);
+    public function new(x:Float, y:Float, spriteSheet:SpriteSheet) {
+        this.spriteSheet = spriteSheet;
+
+        tile.x = x;
+        tile.y = y;
+        tile.originX = 4;
+        tile.originY = 4;
+
         lifeTime = 3 + Math.random() * 2;
-
-        sprite.originX = 4;
-        sprite.originY = 4;
     }
 
-    override function update() {
-        super.update();
+    public function update() {
+        life += Main.SECONDS_PER_TICK;
 
-        x += xSpeed * Main.SECONDS_PER_TICK;
+        tile.x += xSpeed * Main.SECONDS_PER_TICK;
 
-        z += zSpeed * Main.SECONDS_PER_TICK;
-        zSpeed += zAccel * Main.SECONDS_PER_TICK;
-        zAccel = -1 * zSpeed;
-
-        if ((life += Main.SECONDS_PER_TICK) >= lifeTime)
-            alive = false;
-    }
-
-    override function render() {
-        super.render();
-
-        sprite.x = x;
-        sprite.y = y - z;
+        tile.y += ySpeed * Main.SECONDS_PER_TICK;
+        ySpeed += yAccel * Main.SECONDS_PER_TICK;
+        yAccel = -1 * ySpeed;
 
         var age = Std.int(life * 6 / lifeTime);
         if (age <= 4)
-            sprite.id = spriteSheet.smoke[age].id;
+            tile.id = spriteSheet.smoke[age].id;
         else
-            sprite.alpha = 0;
+            tile.alpha = 0;
+    }
+
+    public function alive() {
+        return life < lifeTime;
     }
 }
