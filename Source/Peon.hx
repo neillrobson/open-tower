@@ -112,6 +112,8 @@ class Peon extends Entity {
                     carried.id = spriteSheet.carriedResources[0].id;
                 case ROCK:
                     carried.id = spriteSheet.carriedResources[1].id;
+                case FOOD:
+                    carried.id = spriteSheet.carriedResources[2].id;
             }
             carried.alpha = 1;
         } else {
