@@ -57,7 +57,10 @@ class Job extends EventDispatcher {
         }
     }
 
-    public function cantReach() {}
+    public function cantReach() {
+        if (Math.random() < 0.1)
+            target = null;
+    }
 }
 
 class Gather extends Job {
