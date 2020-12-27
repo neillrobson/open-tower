@@ -14,16 +14,22 @@ class Tree extends Entity {
 
     static inline final HARVEST_PER_TICK = Std.int(MATURE_AGE / HARVEST_TIME);
 
-    // public static final SPREAD_INTERVAL = 1000 * Main.TICKS_PER_SECOND;
+    /** Try to grow a new tree once every seventeen minutes or so **/
+    static inline final SPREAD_INTERVAL = 1000 * Main.TICKS_PER_SECOND;
+
+    var random = new Random();
+
     private var age(default, set):Int;
     private var stamina:Int;
+    private var spreadDelay:Int;
 
-    // private var spreadDelay:Int;
+    // TODO: Variable yield based on maturity?
     // private var yield:Int;
 
     public function new(x:Float, y:Float, age:Int, island:Island, spriteSheet:SpriteSheet) {
         super(x, y, 4, island, spriteSheet);
         this.stamina = this.age = age;
+        spreadDelay = Std.int(Math.random() * SPREAD_INTERVAL);
         sprite.originX = 4;
         sprite.originY = 16;
     }
@@ -32,6 +38,14 @@ class Tree extends Entity {
         if (age < MATURE_AGE) {
             ++age;
             ++stamina;
+        } else if (--spreadDelay <= 0) {
+            var xp = x + random.floatNormal() * 8;
+            var yp = y + random.floatNormal() * 8;
+            var tree = new Tree(xp, yp, 0, island, spriteSheet);
+            if (island.isFree(tree.x, tree.y, tree.r)) {
+                island.addEntity(tree);
+                spreadDelay += SPREAD_INTERVAL;
+            }
         }
     }
 

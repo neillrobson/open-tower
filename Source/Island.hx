@@ -117,7 +117,7 @@ class Island {
         }
     }
 
-    function addEntity(e:Entity) {
+    public function addEntity(e:Entity) {
         game.entityDisplayLayer.addTile(e.sprite);
         entities.push(e);
     }
