@@ -42,11 +42,23 @@ class Island {
         while (peonCount < 10) {
             var x = xStart + Math.random() * 32 - 16;
             var y = yStart + Math.random() * 32 - 16;
-            var p = new Peon(x, y, 0, this, game.spriteSheet);
+            var p = new Peon(x, y, PEON, this, game.spriteSheet);
 
             if (isFree(p.x, p.y, p.r)) {
                 addEntity(p);
                 ++peonCount;
+            }
+        }
+
+        var monsterCount = 0;
+        while (monsterCount < 1) {
+            var x = 20 + Math.random() * 32 - 16;
+            var y = -30 + Math.random() * 32 - 16;
+            var m = new Peon(x, y, MONSTER, this, game.spriteSheet);
+
+            if (isFree(m.x, m.y, m.r)) {
+                addEntity(m);
+                ++monsterCount;
             }
         }
 

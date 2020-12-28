@@ -105,7 +105,7 @@ class House extends Entity {
             if (!Std.isOfType(e, Peon))
                 return false;
             var p:Peon = cast e;
-            return p.job == null;
+            return p.type == PEON && p.job == null;
         });
         return cast entity;
     }

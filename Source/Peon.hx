@@ -1,12 +1,24 @@
 package;
 
+import Entity.TargetFilter;
+import Job.Hunt;
 import event.JobEvent;
 import openfl.display.Tile;
 
+using haxe.EnumTools.EnumValueTools;
+using Std;
+
+enum PeonType {
+    PEON;
+    WARRIOR;
+    MONSTER;
+}
+
 class Peon extends Entity {
-    static inline final BASE_SPEED = 10 * Main.SECONDS_PER_TICK;
-    static inline final MAX_WANDER_TIME = Std.int(1.5 * Main.TICKS_PER_SECOND);
-    static inline final MIN_WANDER_TIME = Std.int(0.5 * Main.TICKS_PER_SECOND);
+    static inline final BASE_SPEED_PEON = 10 * Main.SECONDS_PER_TICK;
+    static inline final BASE_SPEED_MONSTER = 8 * Main.SECONDS_PER_TICK;
+    static inline final MAX_WANDER_TIME = Std.int(1.1 * Main.TICKS_PER_SECOND);
+    static inline final MIN_WANDER_TIME = Std.int(0.1 * Main.TICKS_PER_SECOND);
 
     static final animSteps = [0, 1, 0, 2];
     static final animDirs = [2, 0, 3, 1];
@@ -15,15 +27,20 @@ class Peon extends Entity {
     var carried = new Tile();
 
     public var job(default, set):Job;
+    public var type(default, set):PeonType;
 
-    var type:Int;
+    var typeIndex:Int;
+
+    var hp(default, set) = 100;
+    var maxHp = 100;
 
     public var rot:Float;
 
+    var baseSpeed:Float;
     var moveTick:Float;
     var wanderTime:Int = 0;
 
-    override public function new(x:Float, y:Float, type:Int, island:Island,
+    override public function new(x:Float, y:Float, type:PeonType, island:Island,
             spriteSheet:SpriteSheet) {
         super(x, y, 1, island, spriteSheet);
         this.type = type;
@@ -46,9 +63,20 @@ class Peon extends Entity {
         if (job != null)
             job.update();
 
+        if (job == null) {
+            var enemy = type == PEON ? getRandomTarget(30, 15,
+                isEnemy) : getRandomTarget(70, 80, isEnemy);
+            if (enemy != null) {
+                job = new Hunt(island, this, enemy);
+            }
+        }
+
+        if (hp < maxHp && Math.random() < 0.2)
+            ++hp;
+
         // Calculate speed and direction.
         // If arrived at job, don't move; instead, do a job.arrived() tick
-        var speed = BASE_SPEED;
+        var speed = baseSpeed;
         if (wanderTime == 0 && job != null && job.hasTarget()) {
             var rd = job.target.r + r;
             rot = Math.atan2(job.target.y - y, job.target.x - x);
@@ -101,7 +129,18 @@ class Peon extends Entity {
         var rotStep = mod(Math.round(4 * (rot + island.rot) / (2 * Math.PI)), 4);
         var animStep = animSteps[mod(Math.floor(moveTick / 4), 4)];
 
-        body.id = spriteSheet.peons[type][animDirs[rotStep] * 3 + animStep].id;
+        body.id = spriteSheet.peons[typeIndex][animDirs[rotStep] * 3 + animStep].id;
+    }
+
+    public function isEnemy(e:Entity):Bool {
+        switch (type) {
+            case MONSTER:
+                if (e.isOfType(House))
+                    return true;
+                return e.isOfType(Peon) && (cast e).type != MONSTER;
+            default:
+                return e.isOfType(Peon) && (cast e).type == MONSTER;
+        }
     }
 
     function set_job(job:Job):Job {
@@ -111,6 +150,33 @@ class Peon extends Entity {
             job.addEventListener(JobEvent.CHANGE_CARRIED, onChangeCarried);
 
         return this.job = job;
+    }
+
+    function set_hp(hp:Int):Int {
+        // TODO: We probably want a full die() function here or in Entity.
+        if (hp <= 0)
+            alive = false;
+        return this.hp = hp;
+    }
+
+    function set_type(type:PeonType):PeonType {
+        switch (type) {
+            case PEON:
+                maxHp = 20;
+                baseSpeed = BASE_SPEED_PEON;
+                typeIndex = 0;
+            case WARRIOR:
+                maxHp = 100;
+                baseSpeed = BASE_SPEED_PEON;
+                typeIndex = 1;
+            case MONSTER:
+                maxHp = 100;
+                baseSpeed = BASE_SPEED_MONSTER;
+                typeIndex = 3;
+                job = new Hunt(island, this, null);
+                job.enableBoredom = false;
+        }
+        return this.type = type;
     }
 
     function onChangeCarried(event:JobEvent) {
@@ -124,8 +190,31 @@ class Peon extends Entity {
                     carried.id = spriteSheet.carriedResources[2].id;
             }
             carried.alpha = 1;
+            typeIndex = 2;
         } else {
             carried.alpha = 0;
+            typeIndex = 0;
+        }
+    }
+
+    override function fight(e:Entity) {
+        switch (type) {
+            case PEON:
+                hp -= 4;
+                if (job == null && Math.random() < 0.1)
+                    job = new Hunt(island, this, e);
+            case WARRIOR:
+                --hp;
+                if (job == null)
+                    job = new Hunt(island, this, e);
+            case MONSTER:
+                --hp;
+                if (Math.random() < 0.2) {
+                    if (job.isOfType(Hunt))
+                        job.target = e;
+                    else
+                        job = new Hunt(island, this, e);
+                }
         }
     }
 }

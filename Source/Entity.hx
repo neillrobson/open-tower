@@ -83,4 +83,11 @@ class Entity {
     public function submitResource(r:Resource):Bool {
         return false;
     }
+
+    /**
+        Some other entity is "taking the initiative" and fighting us. We need to
+        respond by changing our health and potentially setting our job to "hunt"
+        the enemy.
+    **/
+    public function fight(e:Entity) {}
 }

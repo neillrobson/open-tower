@@ -1,5 +1,6 @@
 package;
 
+import Peon.PeonType;
 import Resources.Resource;
 import openfl.display.Tile;
 
@@ -27,6 +28,20 @@ class Tower extends Entity {
         sprite.addTile(towerTop);
 
         height = 80;
+    }
+
+    override function update() {
+        super.update();
+
+        // TODO: Add minimum monster count
+        // if (Math.random() < 0.01) {
+        //     var xp = x + (Math.random() * 2 - 1) * (r + 5);
+        //     var yp = y + (Math.random() * 2 - 1) * (r + 5);
+        //     var monster = new Peon(xp, yp, PeonType.MONSTER, island, spriteSheet);
+        //     if (island.isFree(monster.x, monster.y, monster.r)) {
+        //         island.addEntity(monster);
+        //     }
+        // }
     }
 
     override function givesResource(r:Resource):Bool {

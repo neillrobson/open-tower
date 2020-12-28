@@ -1,5 +1,6 @@
 package;
 
+import Peon.PeonType;
 import event.JobEvent;
 import openfl.events.EventDispatcher;
 import Resources.Resource;
@@ -10,6 +11,8 @@ class Job extends EventDispatcher {
     var island:Island;
     var peon:Peon;
     var boreTime:Int = BASE_BORE_TIME;
+
+    public var enableBoredom = true;
 
     public var target:Entity;
 
@@ -25,27 +28,39 @@ class Job extends EventDispatcher {
     }
 
     public function update() {
-        if (boreTime > 0 && --boreTime == 0)
+        if (enableBoredom && boreTime > 0 && --boreTime == 0)
             peon.job = null;
     }
 
+    /**
+        This function is called once per game update so long as the peon has
+        "arrived" at the job's target.
+    **/
     public function arrived() {
         peon.job = null;
     }
 
+    function findNewTarget():Entity {
+        var e = peon.getRandomTarget(5, 60, isValidTarget);
+        if (e != null && e.alive && (target == null || e.distance(peon) < target.distance(peon))) {
+            return e;
+        }
+        return null;
+    }
+
     /**
         Do a limited target search and return true if a target either already
-        exists or has been found by the search.
+        exists or has been found by the search. Valid targets that are closer
+        than the current target will replace the current target by default.
     **/
     public function hasTarget():Bool {
-        var e = peon.getRandomTarget(5, 60, isValidTarget);
-        if (e != null && isValidTarget(e)) {
-            if (target == null || e.distance(peon) < target.distance(peon)) {
-                target = e;
-            }
-        }
         if (target != null && !target.alive)
             target = null;
+
+        var newTarget = findNewTarget();
+        if (newTarget != null)
+            target = newTarget;
+
         return target != null;
     }
 
@@ -126,5 +141,38 @@ class Goto extends Job {
 
     override function isValidTarget(e:Entity):Bool {
         return e == target;
+    }
+}
+
+class Hunt extends Job {
+    override public function new(island:Island, peon:Peon, target:Entity) {
+        super(island, peon);
+        this.target = target;
+    }
+
+    override function isValidTarget(e:Entity):Bool {
+        return peon.isEnemy(e);
+    }
+
+    override function arrived() {
+        target.fight(peon);
+    }
+
+    /**
+        Only do a target search if the current target is null. In other words,
+        don't ditch the current target simply because another target is closer.
+    **/
+    override function findNewTarget():Entity {
+        switch (peon.type) {
+            case MONSTER:
+                if (target == null || Math.random() < 0.01) {
+                    var e = peon.getRandomTarget(60, 30, isValidTarget);
+                    if (e != null && e.alive)
+                        return e;
+                }
+                return null;
+            default:
+                return super.findNewTarget();
+        }
     }
 }
