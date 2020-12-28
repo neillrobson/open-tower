@@ -83,7 +83,7 @@ class Peon extends Entity {
                 }
             }
             rot = Math.random() * 2 * Math.PI;
-            wanderTime = Std.int(Math.random() * MAX_WANDER_TIME - MIN_WANDER_TIME)
+            wanderTime = Std.int(Math.random() * (MAX_WANDER_TIME - MIN_WANDER_TIME))
                 + MIN_WANDER_TIME;
         }
 
