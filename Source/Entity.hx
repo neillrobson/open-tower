@@ -13,17 +13,16 @@ class Entity {
     public var r:Float;
 
     final spriteSheet:SpriteSheet;
-    final island:Island;
+    var island:Island;
 
     public var sprite = new TileContainer();
 
     public var alive = true;
 
-    public function new(x:Float, y:Float, r:Float, island:Island, spriteSheet:SpriteSheet) {
+    public function new(x:Float, y:Float, r:Float, spriteSheet:SpriteSheet) {
         this.x = x;
         this.y = y;
         this.r = r;
-        this.island = island;
         this.spriteSheet = spriteSheet;
     }
 
@@ -33,9 +32,17 @@ class Entity {
         sprite.y = newPoint.y;
     }
 
+    public function init(island:Island) {
+        this.island = island;
+    }
+
     public function update() {}
 
     public function render() {}
+
+    public function die() {
+        alive = false;
+    }
 
     public function collidesWith(e:Entity) {
         return collides(e.x, e.y, e.r);

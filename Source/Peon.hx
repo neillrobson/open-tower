@@ -43,9 +43,8 @@ class Peon extends Entity {
     var moveTick:Float;
     var wanderTime:Int = 0;
 
-    override public function new(x:Float, y:Float, type:PeonType, island:Island,
-            spriteSheet:SpriteSheet) {
-        super(x, y, 1, island, spriteSheet);
+    override public function new(x:Float, y:Float, type:PeonType, spriteSheet:SpriteSheet) {
+        super(x, y, 1, spriteSheet);
 
         sprite.addTile(body);
         sprite.addTile(carried);
@@ -66,6 +65,19 @@ class Peon extends Entity {
         moveTick = Math.random() * 12;
 
         this.type = type;
+    }
+
+    override function init(island:Island) {
+        super.init(island);
+
+        switch (type) {
+            case PEON:
+                ++island.population;
+            case WARRIOR:
+                ++island.warriorPopulation;
+            case MONSTER:
+                ++island.monsterPopulation;
+        }
     }
 
     override function update() {
@@ -143,6 +155,22 @@ class Peon extends Entity {
         body.id = spriteSheet.peons[typeIndex][animDirs[rotStep] * 3 + animStep].id;
     }
 
+    override function die() {
+        if (!alive)
+            return;
+
+        super.die();
+
+        switch (type) {
+            case PEON:
+                --island.population;
+            case WARRIOR:
+                --island.warriorPopulation;
+            case MONSTER:
+                --island.monsterPopulation;
+        }
+    }
+
     public function isEnemy(e:Entity):Bool {
         switch (type) {
             case MONSTER:
@@ -164,9 +192,8 @@ class Peon extends Entity {
     }
 
     function set_hp(hp:Int):Int {
-        // TODO: We probably want a full die() function here or in Entity.
         if (hp <= 0)
-            alive = false;
+            die();
 
         health.getTileAt(1).scaleX = HEALTH_BAR_WIDTH * (hp / maxHp);
         health.alpha = hp == maxHp ? 0 : 1;

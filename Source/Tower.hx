@@ -1,6 +1,5 @@
 package;
 
-import Peon.PeonType;
 import Resources.Resource;
 import openfl.display.Tile;
 
@@ -14,9 +13,10 @@ class Tower extends Entity {
     public var height(default, set):Int;
 
     var stanima = STANIMA_PER_LEVEL;
+    var minMonsters = 3;
 
-    override public function new(x:Float, y:Float, island:Island, spriteSheet:SpriteSheet) {
-        super(x, y, 16, island, spriteSheet);
+    override public function new(x:Float, y:Float, spriteSheet:SpriteSheet) {
+        super(x, y, 16, spriteSheet);
 
         sprite.originX = 16;
 
@@ -33,15 +33,20 @@ class Tower extends Entity {
     override function update() {
         super.update();
 
-        // TODO: Add minimum monster count
-        // if (Math.random() < 0.01) {
-        //     var xp = x + (Math.random() * 2 - 1) * (r + 5);
-        //     var yp = y + (Math.random() * 2 - 1) * (r + 5);
-        //     var monster = new Peon(xp, yp, PeonType.MONSTER, island, spriteSheet);
-        //     if (island.isFree(monster.x, monster.y, monster.r)) {
-        //         island.addEntity(monster);
-        //     }
-        // }
+        if (Math.random() < 0.01 && island.monsterPopulation < minMonsters) {
+            spawnMonster();
+        }
+    }
+
+    function spawnMonster():Bool {
+        var xp = x + (Math.random() * 2 - 1) * (r + 5);
+        var yp = y + (Math.random() * 2 - 1) * (r + 5);
+        var monster = new Peon(xp, yp, MONSTER, spriteSheet);
+        if (island.isFree(monster.x, monster.y, monster.r)) {
+            island.addEntity(monster);
+            return true;
+        }
+        return false;
     }
 
     override function givesResource(r:Resource):Bool {
@@ -52,9 +57,15 @@ class Tower extends Entity {
         stanima -= 64;
         if (stanima <= 0) {
             stanima += STANIMA_PER_LEVEL;
-            if (--height <= 4) {
-                alive = false;
-            }
+
+            while (!spawnMonster()) {}
+
+            if (height % 20 == 0)
+                ++minMonsters;
+
+            if (--height <= 4)
+                die();
+
             return true;
         }
         return false;

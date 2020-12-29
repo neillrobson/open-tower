@@ -8,8 +8,8 @@ class Rock extends Entity {
     var stanima = INITIAL_STANIMA;
     var life = 16;
 
-    public function new(x:Float, y:Float, island:Island, spriteSheet:SpriteSheet) {
-        super(x, y, 5, island, spriteSheet);
+    public function new(x:Float, y:Float, spriteSheet:SpriteSheet) {
+        super(x, y, 5, spriteSheet);
 
         sprite.originX = 4;
         sprite.originY = 6;
@@ -21,7 +21,7 @@ class Rock extends Entity {
         if (stanima <= 0) {
             stanima += INITIAL_STANIMA;
             if (--life == 0)
-                alive = false;
+                die();
             return true;
         }
         return false;

@@ -161,9 +161,13 @@ class Toolbar extends Sprite {
 
         timeText.text = timeString;
 
+        // TODO: Make resource and population text updates event-based
         woodText.text = 'Wood: ${game.island.resources.wood}';
         rockText.text = 'Rock: ${game.island.resources.rock}';
         foodText.text = 'Food: ${game.island.resources.food}';
+
+        populationText.text = 'Population: ${game.island.population} / ${game.island.populationCap}';
+        warriorText.text = 'Warriors: ${game.island.warriorPopulation} / ${game.island.warriorPopulationCap}';
     }
 
     function onHouseSelect(event:ToolbarEvent) {

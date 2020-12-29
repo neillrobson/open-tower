@@ -24,6 +24,12 @@ class Island {
     public var entities:Array<Entity> = new Array();
     public var resources:Resources = new Resources();
 
+    public var population:Int;
+    public var populationCap:Int = 10;
+    public var warriorPopulation:Int;
+    public var warriorPopulationCap:Int;
+    public var monsterPopulation:Int;
+
     public function new(game:Game, image:BitmapData) {
         this.game = game;
         this.image = image;
@@ -31,34 +37,22 @@ class Island {
     }
 
     public function init() {
-        var start = new House(xStart, yStart, HouseType.GUARDPOST, this, game.spriteSheet);
+        var start = new House(xStart, yStart, HouseType.GUARDPOST, game.spriteSheet);
         addEntity(start);
         start.complete();
 
-        tower = new Tower(-xStart, -yStart, this, game.spriteSheet);
+        tower = new Tower(-xStart, -yStart, game.spriteSheet);
         addEntity(tower);
 
         var peonCount = 0;
         while (peonCount < 10) {
             var x = xStart + Math.random() * 32 - 16;
             var y = yStart + Math.random() * 32 - 16;
-            var p = new Peon(x, y, PEON, this, game.spriteSheet);
+            var p = new Peon(x, y, PEON, game.spriteSheet);
 
             if (isFree(p.x, p.y, p.r)) {
                 addEntity(p);
                 ++peonCount;
-            }
-        }
-
-        var monsterCount = 0;
-        while (monsterCount < 1) {
-            var x = 20 + Math.random() * 32 - 16;
-            var y = -30 + Math.random() * 32 - 16;
-            var m = new Peon(x, y, MONSTER, this, game.spriteSheet);
-
-            if (isFree(m.x, m.y, m.r)) {
-                addEntity(m);
-                ++monsterCount;
             }
         }
 
@@ -110,7 +104,7 @@ class Island {
         for (_ in 0...200) {
             var x = x0 + random.floatNormal() * 12;
             var y = y0 + random.floatNormal() * 12;
-            var tree = new Tree(x, y, Math.floor(Math.random() * 16 * Tree.GROW_SPEED), this,
+            var tree = new Tree(x, y, Math.floor(Math.random() * 16 * Tree.GROW_SPEED),
                 game.spriteSheet);
             if (isFree(tree.x, tree.y, tree.r)) {
                 addEntity(tree);
@@ -122,7 +116,7 @@ class Island {
         for (_ in 0...100) {
             var x = x0 + random.floatNormal() * 6;
             var y = y0 + random.floatNormal() * 6;
-            var rock = new Rock(x, y, this, game.spriteSheet);
+            var rock = new Rock(x, y, game.spriteSheet);
             if (isFree(rock.x, rock.y, rock.r)) {
                 addEntity(rock);
             }
@@ -131,6 +125,7 @@ class Island {
 
     public function addEntity(e:Entity) {
         game.entityDisplayLayer.addTile(e.sprite);
+        e.init(this);
         entities.push(e);
     }
 
@@ -171,7 +166,7 @@ class Island {
         if (!resources.canAfford(type))
             return false;
         var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
-        var house = new House(gameCoord.x, gameCoord.y, type, this, game.spriteSheet);
+        var house = new House(gameCoord.x, gameCoord.y, type, game.spriteSheet);
         return isFree(house.x, house.y, house.r);
     }
 
@@ -179,7 +174,7 @@ class Island {
         if (!resources.canAfford(type))
             return;
         var gameCoord = game.coordinateTransform.clone().invert().transformPoint(new Point(xm, ym));
-        var house = new House(gameCoord.x, gameCoord.y, type, this, game.spriteSheet);
+        var house = new House(gameCoord.x, gameCoord.y, type, game.spriteSheet);
 
         if (isFree(house.x, house.y, house.r)) {
             addEntity(house);

@@ -25,8 +25,8 @@ class House extends Entity {
     var maxHp = 256;
     var hp(default, set) = 256;
 
-    public function new(x:Float, y:Float, type:HouseType, island:Island, spriteSheet:SpriteSheet) {
-        super(x, y, type.radius, island, spriteSheet);
+    public function new(x:Float, y:Float, type:HouseType, spriteSheet:SpriteSheet) {
+        super(x, y, type.radius, spriteSheet);
         this.type = type;
 
         sprite.originX = type.anchorX;
@@ -54,9 +54,10 @@ class House extends Entity {
     }
 
     public function sell() {
+        // TODO: Partial returns based on HP
         island.resources.add(WOOD, Std.int(type.wood * 3 / 4));
         island.resources.add(ROCK, Std.int(type.rock * 3 / 4));
-        alive = false;
+        die();
     }
 
     override public function fight(e:Entity, allowRetaliation = true) {
@@ -156,7 +157,7 @@ class House extends Entity {
 
     function set_hp(hp:Int):Int {
         if (hp <= 0)
-            alive = false;
+            die();
 
         health.getTileAt(1).scaleX = HEALTH_BAR_WIDTH * (hp / maxHp);
         health.alpha = hp == maxHp ? 0 : 1;

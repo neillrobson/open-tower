@@ -26,8 +26,8 @@ class Tree extends Entity {
     // TODO: Variable yield based on maturity?
     // private var yield:Int;
 
-    public function new(x:Float, y:Float, age:Int, island:Island, spriteSheet:SpriteSheet) {
-        super(x, y, 4, island, spriteSheet);
+    public function new(x:Float, y:Float, age:Int, spriteSheet:SpriteSheet) {
+        super(x, y, 4, spriteSheet);
         this.stamina = this.age = age;
         spreadDelay = Std.int(Math.random() * SPREAD_INTERVAL);
         sprite.originX = 4;
@@ -41,7 +41,7 @@ class Tree extends Entity {
         } else if (--spreadDelay <= 0) {
             var xp = x + random.floatNormal() * 8;
             var yp = y + random.floatNormal() * 8;
-            var tree = new Tree(xp, yp, 0, island, spriteSheet);
+            var tree = new Tree(xp, yp, 0, spriteSheet);
             if (island.isFree(tree.x, tree.y, tree.r)) {
                 island.addEntity(tree);
                 spreadDelay += SPREAD_INTERVAL;
