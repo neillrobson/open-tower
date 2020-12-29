@@ -1,6 +1,7 @@
 package;
 
 import openfl.display.Tile;
+import openfl.display.TileContainer;
 import Job.Goto;
 import Job.Build;
 import Resources.Resource;
@@ -10,13 +11,19 @@ class House extends Entity {
     static inline final BUILD_ANIMATION_STEPS = 6;
     static inline final BUILD_DURATION = Std.int(BUILD_ANIMATION_STEPS * 1.1 * Main.TICKS_PER_SECOND);
 
+    static inline final HEALTH_BAR_WIDTH = 8;
+
     final type:HouseType;
 
     var houseSprite = new Tile();
     var puffs:Array<Puff> = [];
+    var health = new TileContainer();
 
     var buildTime(default, set) = 0;
     var isBuilt(get, null):Bool;
+
+    var maxHp = 256;
+    var hp(default, set) = 256;
 
     public function new(x:Float, y:Float, type:HouseType, island:Island, spriteSheet:SpriteSheet) {
         super(x, y, type.radius, island, spriteSheet);
@@ -27,6 +34,13 @@ class House extends Entity {
 
         houseSprite.id = spriteSheet.houses[0][0].id;
         sprite.addTile(houseSprite);
+
+        sprite.addTile(health);
+        health.x = 4;
+        health.y = -2;
+        health.alpha = 0;
+        health.addTile(new Tile(spriteSheet.healthBar[1].id, 0, 0, HEALTH_BAR_WIDTH));
+        health.addTile(new Tile(spriteSheet.healthBar[0].id, 0, 0, HEALTH_BAR_WIDTH));
     }
 
     public function build():Bool {
@@ -43,6 +57,10 @@ class House extends Entity {
         island.resources.add(WOOD, Std.int(type.wood * 3 / 4));
         island.resources.add(ROCK, Std.int(type.rock * 3 / 4));
         alive = false;
+    }
+
+    override public function fight(e:Entity, allowRetaliation = true) {
+        --hp;
     }
 
     override public function update() {
@@ -64,6 +82,9 @@ class House extends Entity {
                 }
             }
         } else {
+            if (hp < maxHp && Math.random() < 0.25)
+                ++hp;
+
             var peon:Peon = getRandomPeon(50, 50);
             if (peon != null) {
                 switch (type) {
@@ -131,5 +152,15 @@ class House extends Entity {
     function unpuff(p:Puff) {
         puffs.remove(p);
         sprite.removeTile(p.tile);
+    }
+
+    function set_hp(hp:Int):Int {
+        if (hp <= 0)
+            alive = false;
+
+        health.getTileAt(1).scaleX = HEALTH_BAR_WIDTH * (hp / maxHp);
+        health.alpha = hp == maxHp ? 0 : 1;
+
+        return this.hp = hp;
     }
 }
