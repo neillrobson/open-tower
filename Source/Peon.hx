@@ -89,7 +89,7 @@ class Peon extends Entity {
         // If arrived at job, don't move; instead, do a job.arrived() tick
         var speed = baseSpeed;
         if (wanderTime == 0 && job != null && job.hasTarget()) {
-            var rd = job.target.r + r;
+            var rd = job.targetDistance + r;
             rot = Math.atan2(job.target.y - y, job.target.x - x);
 
             if (distance(job.target) < rd * rd) {
@@ -177,15 +177,12 @@ class Peon extends Entity {
     function set_type(type:PeonType):PeonType {
         switch (type) {
             case PEON:
-                hp = maxHp = 20;
                 baseSpeed = BASE_SPEED_PEON;
                 typeIndex = 0;
             case WARRIOR:
-                hp = maxHp = 100;
                 baseSpeed = BASE_SPEED_PEON;
                 typeIndex = 1;
             case MONSTER:
-                hp = maxHp = 100;
                 baseSpeed = BASE_SPEED_MONSTER;
                 typeIndex = 3;
                 job = new Hunt(island, this, null);
@@ -212,14 +209,18 @@ class Peon extends Entity {
         }
     }
 
-    override function fight(e:Entity) {
+    override function fight(e:Entity, allowRetaliation = true) {
         switch (type) {
             case PEON:
                 hp -= 4;
+                if (allowRetaliation)
+                    e.fight(this, false);
                 if (job == null && Math.random() < 0.1)
                     job = new Hunt(island, this, e);
             case WARRIOR:
                 --hp;
+                if (allowRetaliation)
+                    e.fight(this, false);
                 if (job == null)
                     job = new Hunt(island, this, e);
             case MONSTER:

@@ -11,10 +11,12 @@ class Job extends EventDispatcher {
     var island:Island;
     var peon:Peon;
     var boreTime:Int = BASE_BORE_TIME;
+    var bonusRadius = 2.0;
 
     public var enableBoredom = true;
 
     public var target:Entity;
+    public var targetDistance(get, null):Float;
 
     public function new(island:Island, peon:Peon) {
         super();
@@ -62,6 +64,10 @@ class Job extends EventDispatcher {
             target = newTarget;
 
         return target != null;
+    }
+
+    public function get_targetDistance():Float {
+        return target.r + bonusRadius;
     }
 
     public function collide(e:Entity) {
@@ -137,6 +143,7 @@ class Goto extends Job {
     public function new(island:Island, peon:Peon, target:Entity) {
         super(island, peon);
         this.target = target;
+        bonusRadius = 15;
     }
 
     override function isValidTarget(e:Entity):Bool {
@@ -148,6 +155,7 @@ class Hunt extends Job {
     override public function new(island:Island, peon:Peon, target:Entity) {
         super(island, peon);
         this.target = target;
+        bonusRadius = 5;
     }
 
     override function isValidTarget(e:Entity):Bool {

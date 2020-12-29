@@ -89,5 +89,5 @@ class Entity {
         respond by changing our health and potentially setting our job to "hunt"
         the enemy.
     **/
-    public function fight(e:Entity) {}
+    public function fight(e:Entity, allowRetaliation = true) {}
 }
