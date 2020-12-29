@@ -1,6 +1,6 @@
 package;
 
-import Entity.TargetFilter;
+import openfl.display.TileContainer;
 import Job.Hunt;
 import event.JobEvent;
 import openfl.display.Tile;
@@ -20,11 +20,14 @@ class Peon extends Entity {
     static inline final MAX_WANDER_TIME = Std.int(1.1 * Main.TICKS_PER_SECOND);
     static inline final MIN_WANDER_TIME = Std.int(0.1 * Main.TICKS_PER_SECOND);
 
+    static inline final HEALTH_BAR_WIDTH = 4;
+
     static final animSteps = [0, 1, 0, 2];
     static final animDirs = [2, 0, 3, 1];
 
     var body = new Tile();
     var carried = new Tile();
+    var health = new TileContainer();
 
     public var job(default, set):Job;
     public var type(default, set):PeonType;
@@ -43,18 +46,26 @@ class Peon extends Entity {
     override public function new(x:Float, y:Float, type:PeonType, island:Island,
             spriteSheet:SpriteSheet) {
         super(x, y, 1, island, spriteSheet);
-        this.type = type;
 
         sprite.addTile(body);
         sprite.addTile(carried);
         carried.y = -3;
         carried.alpha = 0;
 
-        rot = Math.random() * 2 * Math.PI;
-        moveTick = Math.random() * 12;
+        sprite.addTile(health);
+        health.x = 2;
+        health.y = -2;
+        health.alpha = 0;
+        health.addTile(new Tile(spriteSheet.healthBar[1].id, 0, 0, HEALTH_BAR_WIDTH));
+        health.addTile(new Tile(spriteSheet.healthBar[0].id, 0, 0, HEALTH_BAR_WIDTH));
 
         sprite.originX = 4;
         sprite.originY = 8;
+
+        rot = Math.random() * 2 * Math.PI;
+        moveTick = Math.random() * 12;
+
+        this.type = type;
     }
 
     override function update() {
@@ -156,21 +167,25 @@ class Peon extends Entity {
         // TODO: We probably want a full die() function here or in Entity.
         if (hp <= 0)
             alive = false;
+
+        health.getTileAt(1).scaleX = HEALTH_BAR_WIDTH * (hp / maxHp);
+        health.alpha = hp == maxHp ? 0 : 1;
+
         return this.hp = hp;
     }
 
     function set_type(type:PeonType):PeonType {
         switch (type) {
             case PEON:
-                maxHp = 20;
+                hp = maxHp = 20;
                 baseSpeed = BASE_SPEED_PEON;
                 typeIndex = 0;
             case WARRIOR:
-                maxHp = 100;
+                hp = maxHp = 100;
                 baseSpeed = BASE_SPEED_PEON;
                 typeIndex = 1;
             case MONSTER:
-                maxHp = 100;
+                hp = maxHp = 100;
                 baseSpeed = BASE_SPEED_MONSTER;
                 typeIndex = 3;
                 job = new Hunt(island, this, null);

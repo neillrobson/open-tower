@@ -21,6 +21,7 @@ class SpriteSheet {
     public final deleteButton:TileData;
     public final carriedResources:Array<TileData>;
     public final smoke:Array<TileData>;
+    public final healthBar:Array<TileData>;
 
     // public final farmPlots:Array<TileData>;
     // public final infoPuffs:Array<TileData>;
@@ -70,6 +71,11 @@ class SpriteSheet {
         smoke = new Array();
         for (i in 0...5) {
             smoke[i] = makeTileData(new Rectangle(256 - 8, 8 * i, 8, 8));
+        }
+
+        healthBar = [];
+        for (i in 0...2) {
+            healthBar[i] = makeTileData(new Rectangle(256 - 32 + i, 0, 1, 1));
         }
     }
 
