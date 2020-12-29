@@ -54,9 +54,8 @@ class House extends Entity {
     }
 
     public function sell() {
-        // TODO: Partial returns based on HP
-        island.resources.add(WOOD, Std.int(type.wood * 3 / 4));
-        island.resources.add(ROCK, Std.int(type.rock * 3 / 4));
+        island.resources.add(WOOD, Std.int(type.wood * 3 * hp / (4 * maxHp)));
+        island.resources.add(ROCK, Std.int(type.rock * 3 * hp / (4 * maxHp)));
         die();
     }
 
