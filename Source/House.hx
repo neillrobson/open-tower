@@ -25,22 +25,29 @@ class House extends Entity {
     var maxHp = 256;
     var hp(default, set) = 256;
 
-    public function new(x:Float, y:Float, type:HouseType, spriteSheet:SpriteSheet) {
-        super(x, y, type.radius, spriteSheet);
+    public function new(x:Float, y:Float, type:HouseType) {
+        super(x, y, type.radius);
         this.type = type;
 
         sprite.originX = type.anchorX;
         sprite.originY = type.anchorY;
 
-        houseSprite.id = spriteSheet.houses[0][0].id;
         sprite.addTile(houseSprite);
 
         sprite.addTile(health);
         health.x = 4;
         health.y = -2;
         health.alpha = 0;
-        health.addTile(new Tile(spriteSheet.healthBar[1].id, 0, 0, HEALTH_BAR_WIDTH));
-        health.addTile(new Tile(spriteSheet.healthBar[0].id, 0, 0, HEALTH_BAR_WIDTH));
+        health.addTile(new Tile(0, 0, 0, HEALTH_BAR_WIDTH));
+        health.addTile(new Tile(0, 0, 0, HEALTH_BAR_WIDTH));
+    }
+
+    override function init(island:Island, spriteSheet:SpriteSheet) {
+        super.init(island, spriteSheet);
+
+        houseSprite.id = spriteSheet.houses[0][0];
+        health.getTileAt(0).id = spriteSheet.healthBar[1];
+        health.getTileAt(1).id = spriteSheet.healthBar[0];
     }
 
     public function build():Bool {
@@ -111,9 +118,9 @@ class House extends Entity {
     function set_buildTime(buildTime:Int):Int {
         this.buildTime = buildTime;
         if (isBuilt) {
-            houseSprite.id = type.getImage(spriteSheet).id;
+            houseSprite.id = type.getImage(spriteSheet);
         } else {
-            houseSprite.id = spriteSheet.houses[0][Math.floor(buildTime * BUILD_ANIMATION_STEPS / BUILD_DURATION)].id;
+            houseSprite.id = spriteSheet.houses[0][Math.floor(buildTime * BUILD_ANIMATION_STEPS / BUILD_DURATION)];
         }
         return buildTime;
     }

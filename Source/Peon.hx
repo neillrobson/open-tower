@@ -28,11 +28,11 @@ class Peon extends Entity {
     var body = new Tile();
     var carried = new Tile();
     var health = new TileContainer();
+    var typeSpriteIndex = 0;
+    var carriedSpriteIndex = 0;
 
     public var job(default, set):Job;
     public var type(default, set):PeonType;
-
-    var typeIndex:Int;
 
     var hp(default, set) = 100;
     var maxHp = 100;
@@ -43,8 +43,8 @@ class Peon extends Entity {
     var moveTick:Float;
     var wanderTime:Int = 0;
 
-    override public function new(x:Float, y:Float, type:PeonType, spriteSheet:SpriteSheet) {
-        super(x, y, 1, spriteSheet);
+    override public function new(x:Float, y:Float, type:PeonType) {
+        super(x, y, 1);
 
         sprite.addTile(body);
         sprite.addTile(carried);
@@ -55,8 +55,8 @@ class Peon extends Entity {
         health.x = 2;
         health.y = -2;
         health.alpha = 0;
-        health.addTile(new Tile(spriteSheet.healthBar[1].id, 0, 0, HEALTH_BAR_WIDTH));
-        health.addTile(new Tile(spriteSheet.healthBar[0].id, 0, 0, HEALTH_BAR_WIDTH));
+        health.addTile(new Tile(0, 0, 0, HEALTH_BAR_WIDTH));
+        health.addTile(new Tile(0, 0, 0, HEALTH_BAR_WIDTH));
 
         sprite.originX = 4;
         sprite.originY = 8;
@@ -67,8 +67,11 @@ class Peon extends Entity {
         this.type = type;
     }
 
-    override function init(island:Island) {
-        super.init(island);
+    override function init(island:Island, spriteSheet:SpriteSheet) {
+        super.init(island, spriteSheet);
+
+        health.getTileAt(0).id = spriteSheet.healthBar[1];
+        health.getTileAt(1).id = spriteSheet.healthBar[0];
 
         switch (type) {
             case PEON:
@@ -152,7 +155,8 @@ class Peon extends Entity {
         var rotStep = mod(Math.round(4 * (rot + island.rot) / (2 * Math.PI)), 4);
         var animStep = animSteps[mod(Math.floor(moveTick / 4), 4)];
 
-        body.id = spriteSheet.peons[typeIndex][animDirs[rotStep] * 3 + animStep].id;
+        body.id = spriteSheet.peons[typeSpriteIndex][animDirs[rotStep] * 3 + animStep];
+        carried.id = spriteSheet.carriedResources[carriedSpriteIndex];
     }
 
     override function die() {
@@ -205,13 +209,13 @@ class Peon extends Entity {
         switch (type) {
             case PEON:
                 baseSpeed = BASE_SPEED_PEON;
-                typeIndex = 0;
+                typeSpriteIndex = 0;
             case WARRIOR:
                 baseSpeed = BASE_SPEED_PEON;
-                typeIndex = 1;
+                typeSpriteIndex = 1;
             case MONSTER:
                 baseSpeed = BASE_SPEED_MONSTER;
-                typeIndex = 3;
+                typeSpriteIndex = 3;
                 job = new Hunt(island, this, null);
                 job.enableBoredom = false;
         }
@@ -222,17 +226,17 @@ class Peon extends Entity {
         if (event.carried != null) {
             switch (event.carried) {
                 case WOOD:
-                    carried.id = spriteSheet.carriedResources[0].id;
+                    carriedSpriteIndex = 0;
                 case ROCK:
-                    carried.id = spriteSheet.carriedResources[1].id;
+                    carriedSpriteIndex = 1;
                 case FOOD:
-                    carried.id = spriteSheet.carriedResources[2].id;
+                    carriedSpriteIndex = 2;
             }
             carried.alpha = 1;
-            typeIndex = 2;
+            typeSpriteIndex = 2;
         } else {
             carried.alpha = 0;
-            typeIndex = 0;
+            typeSpriteIndex = 0;
         }
     }
 

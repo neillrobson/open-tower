@@ -6,28 +6,41 @@ import openfl.display.Tile;
 class Tower extends Entity {
     static inline final STANIMA_PER_LEVEL = 4096;
 
+    var towerBot = new Tile();
     var towerMids:Array<Tile> = [];
-    var towerTopWall:Tile;
-    var towerTop:Tile;
+    var towerTopWall = new Tile();
+    var towerTop = new Tile();
+
+    var towerMidSpriteId = 0;
 
     public var height(default, set):Int;
 
     var stanima = STANIMA_PER_LEVEL;
     var minMonsters = 3;
 
-    override public function new(x:Float, y:Float, spriteSheet:SpriteSheet) {
-        super(x, y, 16, spriteSheet);
+    override public function new(x:Float, y:Float) {
+        super(x, y, 16);
 
         sprite.originX = 16;
 
-        var towerBot = new Tile(spriteSheet.towerBot.id);
         sprite.addTile(towerBot);
-        towerTopWall = new Tile(spriteSheet.towerMid.id);
         sprite.addTile(towerTopWall);
-        towerTop = new Tile(spriteSheet.towerTop.id);
         sprite.addTile(towerTop);
 
         height = 80;
+    }
+
+    override function init(island:Island, spriteSheet:SpriteSheet) {
+        super.init(island, spriteSheet);
+
+        towerBot.id = spriteSheet.towerBot;
+        towerTopWall.id = spriteSheet.towerMid;
+        towerTop.id = spriteSheet.towerTop;
+
+        towerMidSpriteId = spriteSheet.towerMid;
+
+        for (mid in towerMids)
+            mid.id = towerMidSpriteId;
     }
 
     override function update() {
@@ -41,7 +54,7 @@ class Tower extends Entity {
     function spawnMonster():Bool {
         var xp = x + (Math.random() * 2 - 1) * (r + 5);
         var yp = y + (Math.random() * 2 - 1) * (r + 5);
-        var monster = new Peon(xp, yp, MONSTER, spriteSheet);
+        var monster = new Peon(xp, yp, MONSTER);
         if (island.isFree(monster.x, monster.y, monster.r)) {
             island.addEntity(monster);
             return true;
@@ -99,7 +112,7 @@ class Tower extends Entity {
     }
 
     function addMid(i:Int) {
-        var towerMid = new Tile(spriteSheet.towerMid.id, 0, -8 * (i + 1));
+        var towerMid = new Tile(towerMidSpriteId, 0, -8 * (i + 1));
         towerMids.push(towerMid);
         sprite.addTile(towerMid);
     }

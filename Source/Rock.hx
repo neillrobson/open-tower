@@ -8,12 +8,16 @@ class Rock extends Entity {
     var stanima = INITIAL_STANIMA;
     var life = 16;
 
-    public function new(x:Float, y:Float, spriteSheet:SpriteSheet) {
-        super(x, y, 5, spriteSheet);
+    public function new(x:Float, y:Float) {
+        super(x, y, 5);
 
         sprite.originX = 4;
         sprite.originY = 6;
-        sprite.id = spriteSheet.rocks[Std.int(Math.random() * 4)].id;
+    }
+
+    override function init(island:Island, spriteSheet:SpriteSheet) {
+        super.init(island, spriteSheet);
+        sprite.id = spriteSheet.rocks[Std.int(Math.random() * 4)];
     }
 
     override function gatherResource(r:Resource):Bool {

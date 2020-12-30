@@ -17,6 +17,8 @@ class Tree extends Entity {
     /** Try to grow a new tree once every seventeen minutes or so **/
     static inline final SPREAD_INTERVAL = 1000 * Main.TICKS_PER_SECOND;
 
+    var spriteIndex = 15;
+
     var random = new Random();
 
     private var age(default, set):Int;
@@ -26,8 +28,8 @@ class Tree extends Entity {
     // TODO: Variable yield based on maturity?
     // private var yield:Int;
 
-    public function new(x:Float, y:Float, age:Int, spriteSheet:SpriteSheet) {
-        super(x, y, 4, spriteSheet);
+    public function new(x:Float, y:Float, age:Int) {
+        super(x, y, 4);
         this.stamina = this.age = age;
         spreadDelay = Std.int(Math.random() * SPREAD_INTERVAL);
         sprite.originX = 4;
@@ -41,7 +43,7 @@ class Tree extends Entity {
         } else if (--spreadDelay <= 0) {
             var xp = x + random.floatNormal() * 8;
             var yp = y + random.floatNormal() * 8;
-            var tree = new Tree(xp, yp, 0, spriteSheet);
+            var tree = new Tree(xp, yp, 0);
             if (island.isFree(tree.x, tree.y, tree.r)) {
                 island.addEntity(tree);
                 spreadDelay += SPREAD_INTERVAL;
@@ -49,9 +51,14 @@ class Tree extends Entity {
         }
     }
 
-    function set_age(newAge:Int) {
-        sprite.id = spriteSheet.trees[15 - Std.int(newAge / GROW_SPEED)].id;
-        return age = newAge;
+    override function render() {
+        super.render();
+        sprite.id = spriteSheet.trees[spriteIndex];
+    }
+
+    function set_age(age:Int) {
+        spriteIndex = 15 - Std.int(age / GROW_SPEED);
+        return this.age = age;
     }
 
     override function givesResource(r:Resource):Bool {

@@ -97,7 +97,7 @@ class Game extends Sprite {
 
         // Don't add cursor yet; we're starting on title screen
         cursor = new Tile();
-        cursor.id = spriteSheet.deleteButton.id;
+        cursor.id = spriteSheet.deleteButton;
     }
 
     public function update() {
@@ -239,10 +239,10 @@ class Game extends Sprite {
     function onHouseSelect(event:ToolbarEvent) {
         if (event.selection >= 0) {
             selectedHouseType = HouseType.houseTypes[event.selection];
-            cursor.id = selectedHouseType.getImage(spriteSheet).id;
+            cursor.id = selectedHouseType.getImage(spriteSheet);
         } else {
             selectedHouseType = null;
-            cursor.id = spriteSheet.deleteButton.id;
+            cursor.id = spriteSheet.deleteButton;
         }
     }
 

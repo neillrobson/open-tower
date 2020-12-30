@@ -12,18 +12,17 @@ class Entity {
     public var y:Float;
     public var r:Float;
 
-    final spriteSheet:SpriteSheet;
+    var spriteSheet:SpriteSheet;
     var island:Island;
 
     public var sprite = new TileContainer();
 
     public var alive = true;
 
-    public function new(x:Float, y:Float, r:Float, spriteSheet:SpriteSheet) {
+    public function new(x:Float, y:Float, r:Float) {
         this.x = x;
         this.y = y;
         this.r = r;
-        this.spriteSheet = spriteSheet;
     }
 
     public function updatePos(coordinateTransform:Matrix) {
@@ -32,8 +31,9 @@ class Entity {
         sprite.y = newPoint.y;
     }
 
-    public function init(island:Island) {
+    public function init(island:Island, spriteSheet:SpriteSheet) {
         this.island = island;
+        this.spriteSheet = spriteSheet;
     }
 
     public function update() {}

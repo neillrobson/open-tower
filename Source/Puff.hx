@@ -37,7 +37,7 @@ class Puff {
 
         var age = Std.int(life * 6 / lifeTime);
         if (age <= 4)
-            tile.id = spriteSheet.smoke[age].id;
+            tile.id = spriteSheet.smoke[age];
         else
             tile.alpha = 0;
     }
