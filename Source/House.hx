@@ -1,5 +1,6 @@
 package;
 
+import Job.GotoAndConvert;
 import Job.Plant;
 import openfl.display.Tile;
 import openfl.display.TileContainer;
@@ -15,6 +16,9 @@ class House extends Entity {
     static inline final BUILD_DURATION = Std.int(BUILD_ANIMATION_STEPS * 1.1 * Main.TICKS_PER_SECOND);
 
     static inline final HEALTH_BAR_WIDTH = 8;
+
+    static inline final POPULATION_PER_RESIDENCE = 10;
+    static inline final WARRIORS_PER_BARRACKS = 5;
 
     final type:HouseType;
 
@@ -54,8 +58,19 @@ class House extends Entity {
     }
 
     public function build():Bool {
-        if (!isBuilt)
+        if (!isBuilt) {
             ++buildTime;
+
+            if (isBuilt) {
+                switch (type) {
+                    case HouseType.RESIDENCE:
+                        island.populationCap += POPULATION_PER_RESIDENCE;
+                    case HouseType.BARRACKS:
+                        island.warriorPopulationCap += WARRIORS_PER_BARRACKS;
+                    default:
+                }
+            }
+        }
         return isBuilt;
     }
 
@@ -120,8 +135,25 @@ class House extends Entity {
                     peon = getRandomPeon(80, 80);
                     if (peon != null && Math.random() < 0.5)
                         peon.job = new Goto(island, peon, this);
+                case HouseType.BARRACKS:
+                    if (island.canMakeWarrior) {
+                        peon = getRandomPeon(80, 80);
+                        if (peon != null)
+                            peon.job = new GotoAndConvert(island, peon, this);
+                    }
             }
         }
+    }
+
+    override function die() {
+        switch (type) {
+            case HouseType.RESIDENCE:
+                island.populationCap -= POPULATION_PER_RESIDENCE;
+            case HouseType.BARRACKS:
+                island.warriorPopulationCap -= WARRIORS_PER_BARRACKS;
+            default:
+        }
+        super.die();
     }
 
     inline function get_isBuilt():Bool {
@@ -163,7 +195,7 @@ class House extends Entity {
         return false;
     }
 
-    function puff() {
+    public function puff() {
         var p = new Puff(11, 3, spriteSheet);
         puffs.push(p);
         sprite.addTile(p.tile);

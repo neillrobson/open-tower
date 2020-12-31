@@ -155,6 +155,29 @@ class Goto extends Job {
     }
 }
 
+class GotoAndConvert extends Job {
+    var house:House;
+
+    override public function new(island:Island, peon:Peon, target:House) {
+        super(island, peon);
+        this.target = house = target;
+    }
+
+    override function isValidTarget(e:Entity):Bool {
+        return e == target;
+    }
+
+    override function arrived() {
+        if (island.canMakeWarrior) {
+            ++island.warriorPopulation;
+            island.resources.wood -= Island.WOOD_PER_WARRIOR;
+            peon.type = WARRIOR;
+            house.puff();
+        }
+        peon.job = null;
+    }
+}
+
 class Hunt extends Job {
     override public function new(island:Island, peon:Peon, target:Entity) {
         super(island, peon);

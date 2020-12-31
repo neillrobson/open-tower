@@ -10,6 +10,9 @@ import openfl.display.BitmapData;
     screen and (more importantly) positive angles will rotate objects clockwise.
 **/
 class Island {
+    public static inline final FOOD_PER_PEON = 5;
+    public static inline final WOOD_PER_WARRIOR = 5;
+
     private static final xStart = 40;
     private static final yStart = -60;
 
@@ -29,6 +32,9 @@ class Island {
     public var warriorPopulation:Int;
     public var warriorPopulationCap:Int;
     public var monsterPopulation:Int;
+
+    public var canMakePeon(get, null):Bool;
+    public var canMakeWarrior(get, null):Bool;
 
     public function new(game:Game, image:BitmapData) {
         this.game = game;
@@ -189,6 +195,14 @@ class Island {
                 return false;
         }
         return true;
+    }
+
+    public function get_canMakePeon():Bool {
+        return population < populationCap && resources.food >= FOOD_PER_PEON;
+    }
+
+    public function get_canMakeWarrior():Bool {
+        return warriorPopulation < warriorPopulationCap && resources.wood >= WOOD_PER_WARRIOR;
     }
 
     function isOnGround(x:Float, y:Float):Bool {

@@ -211,20 +211,32 @@ class Peon extends Entity {
     }
 
     function set_type(type:PeonType):PeonType {
+        setTypeSpriteIndex(type);
+
         switch (type) {
             case PEON:
                 baseSpeed = BASE_SPEED_PEON;
-                typeSpriteIndex = 0;
             case WARRIOR:
                 baseSpeed = BASE_SPEED_PEON;
-                typeSpriteIndex = 1;
             case MONSTER:
                 baseSpeed = BASE_SPEED_MONSTER;
-                typeSpriteIndex = 3;
                 job = new Hunt(island, this, null);
                 job.enableBoredom = false;
         }
+
         return this.type = type;
+    }
+
+    function setTypeSpriteIndex(type:PeonType = null) {
+        type = type == null ? this.type : type;
+        switch (type) {
+            case PEON:
+                typeSpriteIndex = 0;
+            case WARRIOR:
+                typeSpriteIndex = 1;
+            case MONSTER:
+                typeSpriteIndex = 3;
+        }
     }
 
     function setCarriedResource(r:Resource) {
@@ -234,7 +246,7 @@ class Peon extends Entity {
             typeSpriteIndex = 2;
         } else {
             carried.alpha = 0;
-            typeSpriteIndex = 0;
+            setTypeSpriteIndex();
         }
     }
 
