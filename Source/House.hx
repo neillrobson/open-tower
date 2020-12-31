@@ -1,11 +1,14 @@
 package;
 
+import Job.Plant;
 import openfl.display.Tile;
 import openfl.display.TileContainer;
 import Job.Goto;
 import Job.Build;
 import Resources.Resource;
 import Job.Gather;
+
+using Std;
 
 class House extends Entity {
     static inline final BUILD_ANIMATION_STEPS = 6;
@@ -99,6 +102,13 @@ class House extends Entity {
                         peon.job = new Gather(island, peon, WOOD, this);
                     case HouseType.MASON:
                         peon.job = new Gather(island, peon, ROCK, this);
+                    case HouseType.WINDMILL:
+                        peon.job = new Gather(island, peon, FOOD, this);
+                    // Only plant stuff if there is a clearing nearby.
+                    // Peons don't count as taking up "planting space."
+                    case HouseType.PLANTER:
+                        if (getRandomTarget(6, 40, e -> !e.isOfType(Peon)) == null)
+                            peon.job = new Plant(island, peon, this);
                 }
             }
 

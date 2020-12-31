@@ -1,5 +1,6 @@
 package;
 
+import Resources.Resource;
 import openfl.display.TileContainer;
 import Job.Hunt;
 import event.JobEvent;
@@ -187,10 +188,14 @@ class Peon extends Entity {
     }
 
     function set_job(job:Job):Job {
-        if (this.job != null)
-            this.job.removeEventListener(JobEvent.CHANGE_CARRIED, onChangeCarried);
+        if (this.job != null) {
+            this.job.removeEventListener(JobEvent.CHANGE_CARRIED,
+                e -> setCarriedResource(e.carried));
+            setCarriedResource(null);
+        }
+
         if (job != null)
-            job.addEventListener(JobEvent.CHANGE_CARRIED, onChangeCarried);
+            job.addEventListener(JobEvent.CHANGE_CARRIED, e -> setCarriedResource(e.carried));
 
         return this.job = job;
     }
@@ -222,16 +227,9 @@ class Peon extends Entity {
         return this.type = type;
     }
 
-    function onChangeCarried(event:JobEvent) {
-        if (event.carried != null) {
-            switch (event.carried) {
-                case WOOD:
-                    carriedSpriteIndex = 0;
-                case ROCK:
-                    carriedSpriteIndex = 1;
-                case FOOD:
-                    carriedSpriteIndex = 2;
-            }
+    function setCarriedResource(r:Resource) {
+        if (r != null) {
+            carriedSpriteIndex = r.getIndex();
             carried.alpha = 1;
             typeSpriteIndex = 2;
         } else {

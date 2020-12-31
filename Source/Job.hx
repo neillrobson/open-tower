@@ -184,3 +184,53 @@ class Hunt extends Job {
         }
     }
 }
+
+class Plant extends Job {
+    var hasSeed(default, set) = false;
+    var toPlant:Entity;
+
+    override public function new(island:Island, peon:Peon, target:Entity) {
+        super(island, peon);
+        this.target = target;
+        toPlant = new Tree(0, 0, 0);
+    }
+
+    override function isValidTarget(e:Entity):Bool {
+        if (hasSeed)
+            return false;
+        return e == target;
+    }
+
+    /**
+        Do standard target search until reaching the house (acquiring the seed).
+        Then, let the peon wander freely until a valid planting spot is reached.
+    **/
+    override function hasTarget():Bool {
+        if (!hasSeed)
+            return super.hasTarget();
+
+        toPlant.x = peon.x + Math.cos(peon.rot) * (toPlant.r * 2 + 2);
+        toPlant.y = peon.y + Math.sin(peon.rot) * (toPlant.r * 2 + 2);
+        if (island.isFree(toPlant.x, toPlant.y, toPlant.r * 2)) {
+            island.addEntity(toPlant);
+            hasSeed = false;
+            peon.job = null;
+        }
+
+        return false;
+    }
+
+    override function arrived() {
+        if (!hasSeed) {
+            hasSeed = true;
+            bonusRadius = 15;
+            boreTime = 300;
+        }
+    }
+
+    function set_hasSeed(hasSeed:Bool):Bool {
+        dispatchEvent(new JobEvent(JobEvent.CHANGE_CARRIED, hasSeed ? Resource.SEED : null));
+
+        return this.hasSeed = hasSeed;
+    }
+}

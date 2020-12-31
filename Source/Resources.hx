@@ -4,6 +4,7 @@ enum Resource {
     WOOD;
     ROCK;
     FOOD;
+    SEED;
 }
 
 class Resources {
@@ -21,6 +22,7 @@ class Resources {
                 rock += count;
             case FOOD:
                 food += count;
+            default:
         }
     }
 
