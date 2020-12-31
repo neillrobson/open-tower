@@ -22,6 +22,7 @@ class Puff {
         tile.y = y;
         tile.originX = 4;
         tile.originY = 4;
+        tile.id = spriteSheet.smoke[0];
 
         lifeTime = 3 + Math.random() * 2;
     }
