@@ -108,7 +108,10 @@ class House extends Entity {
                     // Peons don't count as taking up "planting space."
                     case HouseType.PLANTER:
                         if (getRandomTarget(6, 40, e -> !e.isOfType(Peon)) == null)
-                            peon.job = new Plant(island, peon, this);
+                            peon.job = new Plant(island, peon, this, TREE);
+                    case HouseType.FARM:
+                        if (getRandomTarget(6, 40, e -> !e.isOfType(Peon)) == null)
+                            peon.job = new Plant(island, peon, this, FOOD);
                 }
             }
 

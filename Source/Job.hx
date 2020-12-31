@@ -1,9 +1,13 @@
 package;
 
-import Peon.PeonType;
 import event.JobEvent;
 import openfl.events.EventDispatcher;
 import Resources.Resource;
+
+enum SeedType {
+    FOOD;
+    TREE;
+}
 
 class Job extends EventDispatcher {
     static inline final BASE_BORE_TIME = 16 * Main.TICKS_PER_SECOND;
@@ -189,10 +193,15 @@ class Plant extends Job {
     var hasSeed(default, set) = false;
     var toPlant:Entity;
 
-    override public function new(island:Island, peon:Peon, target:Entity) {
+    override public function new(island:Island, peon:Peon, target:Entity, type:SeedType) {
         super(island, peon);
         this.target = target;
-        toPlant = new Tree(0, 0, 0);
+        switch (type) {
+            case FOOD:
+                toPlant = new FarmPlot(0, 0, 0);
+            case TREE:
+                toPlant = new Tree(0, 0, 0);
+        }
     }
 
     override function isValidTarget(e:Entity):Bool {
@@ -209,9 +218,9 @@ class Plant extends Job {
         if (!hasSeed)
             return super.hasTarget();
 
-        toPlant.x = peon.x + Math.cos(peon.rot) * (toPlant.r * 2 + 2);
-        toPlant.y = peon.y + Math.sin(peon.rot) * (toPlant.r * 2 + 2);
-        if (island.isFree(toPlant.x, toPlant.y, toPlant.r * 2)) {
+        toPlant.x = peon.x + Math.cos(peon.rot) * 10;
+        toPlant.y = peon.y + Math.sin(peon.rot) * 10;
+        if (island.isFree(toPlant.x, toPlant.y, 8)) {
             island.addEntity(toPlant);
             hasSeed = false;
             peon.job = null;

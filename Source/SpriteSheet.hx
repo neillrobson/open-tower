@@ -21,10 +21,10 @@ class SpriteSheet {
     public final carriedResources:Array<Int>;
     public final smoke:Array<Int>;
     public final healthBar:Array<Int>;
+    public final farmPlots:Array<Int>;
 
     private var bitmapCache:IntMap<BitmapData> = new IntMap();
 
-    // public final farmPlots:Array<Int>;
     // public final infoPuffs:Array<Int>;
     // public final helpButton:Int;
     // public final soundButtons:Array<Int>;
@@ -78,6 +78,10 @@ class SpriteSheet {
         for (i in 0...2) {
             healthBar[i] = tileset.addRect(new Rectangle(256 - 32 + i, 0, 1, 1));
         }
+
+        farmPlots = [];
+        for (i in 0...8)
+            farmPlots[i] = tileset.addRect(new Rectangle(32 + i * 8, 11 * 8, 8, 8));
     }
 
     public function getBitmapData(id:Int):BitmapData {

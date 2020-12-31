@@ -6,8 +6,10 @@ class Tree extends Entity {
     /** About eleven seconds per "sprite change" growth **/
     public static inline final GROW_SPEED = 11 * Main.TICKS_PER_SECOND;
 
+    static inline final NUM_SPRITES = 16;
+
     /** There are sixteen tree sprites to account for **/
-    static inline final MATURE_AGE = GROW_SPEED * 15;
+    static inline final MATURE_AGE = GROW_SPEED * (NUM_SPRITES - 1);
 
     /** About three seconds to harvest a fully-grown tree **/
     static inline final HARVEST_TIME = 3 * Main.TICKS_PER_SECOND;
@@ -17,7 +19,7 @@ class Tree extends Entity {
     /** Try to grow a new tree once every seventeen minutes or so **/
     static inline final SPREAD_INTERVAL = 1000 * Main.TICKS_PER_SECOND;
 
-    var spriteIndex = 15;
+    var spriteIndex = NUM_SPRITES - 1;
 
     var random = new Random();
 
@@ -57,7 +59,7 @@ class Tree extends Entity {
     }
 
     function set_age(age:Int) {
-        spriteIndex = 15 - Std.int(age / GROW_SPEED);
+        spriteIndex = (NUM_SPRITES - 1) - Std.int(age / GROW_SPEED);
         return this.age = age;
     }
 

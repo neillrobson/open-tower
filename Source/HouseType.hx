@@ -60,6 +60,12 @@ class HouseType {
                 return "Gathers nearby stones; produces rock";
             case WOODCUTTER:
                 return "Cuts down nearby trees; produces wood";
+            case PLANTER:
+                return "Plants new trees that can later be cut down";
+            case FARM:
+                return "Plants crops that can later be harvested";
+            case WINDMILL:
+                return "Gathers nearby grown crops; produces food";
             case GUARDPOST:
                 return "Peons generally stay near these";
             default:
