@@ -141,6 +141,18 @@ class House extends Entity {
                         if (peon != null)
                             peon.job = new GotoAndConvert(island, peon, this);
                     }
+                case HouseType.RESIDENCE:
+                    if (island.canMakePeon && Math.random() < 0.05) {
+                        var xt = x + (Math.random() * 2 - 1) * 9;
+                        var yt = y + (Math.random() * 2 - 1) * 9;
+
+                        var peon = new Peon(xt, yt, PEON);
+                        if (island.isFree(peon.x, peon.y, peon.r)) {
+                            puff();
+                            island.resources.food -= Island.FOOD_PER_PEON;
+                            island.addEntity(peon);
+                        }
+                    }
             }
         }
     }

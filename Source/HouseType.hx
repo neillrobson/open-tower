@@ -68,6 +68,10 @@ class HouseType {
                 return "Gathers nearby grown crops; produces food";
             case GUARDPOST:
                 return "Peons generally stay near these";
+            case BARRACKS:
+                return 'Converts peons into warriors for ${Island.WOOD_PER_WARRIOR} each';
+            case RESIDENCE:
+                return 'Produces peons for ${Island.FOOD_PER_PEON} each';
             default:
                 return "**unknown**";
         }
