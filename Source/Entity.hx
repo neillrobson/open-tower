@@ -42,6 +42,7 @@ class Entity {
 
     public function die() {
         alive = false;
+        island.removeEntity(this);
     }
 
     public function collidesWith(e:Entity) {

@@ -70,7 +70,7 @@ class Tree extends Entity {
     override function gatherResource(r:Resource):Bool {
         stamina -= HARVEST_PER_TICK;
         if (stamina <= 0) {
-            alive = false;
+            die();
             return true;
         }
         return false;

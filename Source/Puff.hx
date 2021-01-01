@@ -4,6 +4,7 @@ import openfl.display.Tile;
 
 class Puff {
     public var tile = new Tile();
+    public var alive(get, null):Bool;
 
     final spriteSheet:SpriteSheet;
 
@@ -43,7 +44,7 @@ class Puff {
             tile.alpha = 0;
     }
 
-    public function alive() {
+    public function get_alive() {
         return life < lifeTime;
     }
 }

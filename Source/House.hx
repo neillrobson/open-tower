@@ -93,7 +93,7 @@ class House extends Entity {
 
         for (p in puffs) {
             p.update();
-            if (!p.alive()) {
+            if (!p.alive) {
                 unpuff(p);
             }
         }

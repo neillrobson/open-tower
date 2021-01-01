@@ -149,7 +149,7 @@ class Island {
         entities.push(e);
     }
 
-    function removeEntity(e:Entity) {
+    public function removeEntity(e:Entity) {
         game.entityDisplayLayer.removeTile(e.sprite);
         entities.remove(e);
     }
