@@ -14,7 +14,7 @@ jobs:
       - name: Install OpenFL
         run: haxelib install openfl
       - name: Build HTML5 game
-        run: openfl build -final -clean html5
+        run: haxelib run openfl build -final -clean html5
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
