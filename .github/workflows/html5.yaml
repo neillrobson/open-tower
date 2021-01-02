@@ -15,6 +15,8 @@ jobs:
         run: |
           haxelib install lime --quiet
           haxelib install openfl --quiet
+      - name: Run OpenFL setup command
+        run: yes "y" | haxelib run openfl setup
       - name: Build HTML5 game
         run: haxelib run openfl build -final -clean html5
       - name: Deploy to GitHub Pages
