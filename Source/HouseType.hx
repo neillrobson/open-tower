@@ -69,9 +69,9 @@ class HouseType {
             case GUARDPOST:
                 return "Peons generally stay near these";
             case BARRACKS:
-                return 'Converts peons into warriors for ${Island.WOOD_PER_WARRIOR} each';
+                return 'Converts peons into warriors for ${Island.WOOD_PER_WARRIOR} wood each';
             case RESIDENCE:
-                return 'Produces peons for ${Island.FOOD_PER_PEON} each';
+                return 'Produces peons for ${Island.FOOD_PER_PEON} food each';
             default:
                 return "**unknown**";
         }
