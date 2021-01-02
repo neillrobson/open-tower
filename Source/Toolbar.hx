@@ -120,6 +120,7 @@ class Toolbar extends Sprite {
         }
 
         selectedHouseMarker = new Shape();
+        selectedHouseMarker.x = getHouseXCoord(-1);
         selectedHouseMarker.y = MARGIN;
         selectedHouseMarker.graphics.lineStyle(1, 0xFFFFFF);
         selectedHouseMarker.graphics.drawRect(0, 0, HOUSE_BUTTON_SIDE, HOUSE_BUTTON_SIDE);
@@ -130,6 +131,8 @@ class Toolbar extends Sprite {
         houseCost.defaultTextFormat = textFormat;
         houseCost.selectable = false;
         houseCost.y = MARGIN + 2 * LINE_HEIGHT;
+        houseCost.width = houseCost.textWidth;
+        houseCost.x = selectedHouseMarker.x + HOUSE_BUTTON_SIDE / 2 - houseCost.textWidth / 2;
         addChild(houseCost);
 
         houseDesc = new TextField();
@@ -137,9 +140,9 @@ class Toolbar extends Sprite {
         houseDesc.defaultTextFormat = textFormat;
         houseDesc.selectable = false;
         houseDesc.y = MARGIN + 3 * LINE_HEIGHT;
+        houseDesc.width = houseDesc.textWidth;
+        houseDesc.x = selectedHouseMarker.x + HOUSE_BUTTON_SIDE / 2 - houseDesc.textWidth / 2;
         addChild(houseDesc);
-
-        dispatchEvent(new ToolbarEvent(ToolbarEvent.HOUSE_SELECT, -1));
     }
 
     private function getHouseXCoord(type):Int {
@@ -171,10 +174,10 @@ class Toolbar extends Sprite {
     }
 
     function onHouseSelect(event:ToolbarEvent) {
-        var newSelection = getHouseXCoord(event.selection);
-        if (newSelection == selectedHouseMarker.x)
+        var newSelectionXPos = getHouseXCoord(event.selection);
+        if (newSelectionXPos == selectedHouseMarker.x)
             return;
-        selectedHouseMarker.x = newSelection;
+        selectedHouseMarker.x = newSelectionXPos;
         Assets.getSound('assets/Sounds/Select.wav').play();
 
         if (event.selection >= 0) {
