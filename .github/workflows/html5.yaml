@@ -11,8 +11,10 @@ jobs:
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.1.4
-      - name: Install OpenFL
-        run: haxelib install openfl
+      - name: Install Lime and OpenFL
+        run: |
+          haxelib install lime --quiet
+          haxelib install openfl --quiet
       - name: Build HTML5 game
         run: haxelib run openfl build -final -clean html5
       - name: Deploy to GitHub Pages
