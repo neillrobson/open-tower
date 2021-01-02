@@ -1,6 +1,9 @@
 name: Build and Publish HTML5 Game
 
 on:
+  push:
+    tags:
+      - '**'
   workflow_dispatch:
 
 jobs:
