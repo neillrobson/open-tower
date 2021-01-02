@@ -1,5 +1,6 @@
 package;
 
+import openfl.Assets;
 import openfl.events.MouseEvent;
 import Entity.TargetFilter;
 import openfl.geom.Point;
@@ -197,6 +198,7 @@ class Island {
         var house = new House(gameCoord.x, gameCoord.y, type);
 
         if (isFree(house.x, house.y, house.r)) {
+            Assets.getSound('assets/Sounds/Plant.wav').play();
             addEntity(house);
             resources.charge(type);
         }

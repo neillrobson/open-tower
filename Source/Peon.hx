@@ -1,5 +1,6 @@
 package;
 
+import openfl.Assets;
 import Resources.Resource;
 import openfl.display.TileContainer;
 import Job.Hunt;
@@ -169,10 +170,13 @@ class Peon extends Entity {
         switch (type) {
             case PEON:
                 --island.population;
+                Assets.getSound('assets/Sounds/Death.wav').play();
             case WARRIOR:
                 --island.warriorPopulation;
+                Assets.getSound('assets/Sounds/Death.wav').play();
             case MONSTER:
                 --island.monsterPopulation;
+                Assets.getSound('assets/Sounds/Monster Death.wav').play();
         }
     }
 

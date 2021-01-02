@@ -171,7 +171,11 @@ class Toolbar extends Sprite {
     }
 
     function onHouseSelect(event:ToolbarEvent) {
-        selectedHouseMarker.x = getHouseXCoord(event.selection);
+        var newSelection = getHouseXCoord(event.selection);
+        if (newSelection == selectedHouseMarker.x)
+            return;
+        selectedHouseMarker.x = newSelection;
+        Assets.getSound('assets/Sounds/Select.wav').play();
 
         if (event.selection >= 0) {
             var type = HouseType.houseTypes[event.selection];

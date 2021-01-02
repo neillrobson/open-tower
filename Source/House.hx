@@ -1,5 +1,6 @@
 package;
 
+import openfl.Assets;
 import Job.GotoAndConvert;
 import Job.Plant;
 import openfl.display.Tile;
@@ -62,6 +63,7 @@ class House extends Entity {
             ++buildTime;
 
             if (isBuilt) {
+                Assets.getSound('assets/Sounds/Finish Building.wav').play();
                 switch (type) {
                     case HouseType.RESIDENCE:
                         island.populationCap += POPULATION_PER_RESIDENCE;
@@ -148,6 +150,7 @@ class House extends Entity {
 
                         var peon = new Peon(xt, yt, PEON);
                         if (island.isFree(peon.x, peon.y, peon.r)) {
+                            Assets.getSound('assets/Sounds/Spawn.wav').play();
                             puff();
                             island.resources.food -= Island.FOOD_PER_PEON;
                             island.addEntity(peon);
@@ -158,6 +161,7 @@ class House extends Entity {
     }
 
     override function die() {
+        Assets.getSound('assets/Sounds/Destroy.wav').play();
         switch (type) {
             case HouseType.RESIDENCE:
                 island.populationCap -= POPULATION_PER_RESIDENCE;
@@ -201,6 +205,7 @@ class House extends Entity {
 
     override function submitResource(r:Resource):Bool {
         if (buildTime >= BUILD_DURATION && type.acceptResource == r) {
+            Assets.getSound('assets/Sounds/Gather.wav').play();
             puff();
             return true;
         }
