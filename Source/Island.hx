@@ -31,11 +31,11 @@ class Island {
     public var entities:Array<Entity> = new Array();
     public var resources:Resources = new Resources();
 
-    public var population:Int;
+    public var population:Int = 0;
     public var populationCap:Int = 10;
-    public var warriorPopulation:Int;
-    public var warriorPopulationCap:Int;
-    public var monsterPopulation:Int;
+    public var warriorPopulation:Int = 0;
+    public var warriorPopulationCap:Int = 0;
+    public var monsterPopulation:Int = 0;
 
     public var canMakePeon(get, null):Bool;
     public var canMakeWarrior(get, null):Bool;
