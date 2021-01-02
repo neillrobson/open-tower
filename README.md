@@ -17,3 +17,17 @@ See [Breaking the Tower](https://github.com/al6x/BreakingTheTower) for inspirati
   * Stone: collected from rocks on ground (path?) and delivered to mason.
     The tower is also rock!
   * Steel: comes from the top of the tower. Used to construct gazebo.
+
+## Sounds
+
+* Select
+* Plant
+* Finish Building
+* Gather
+* Destroy
+* Spawn
+* Spawn Warrior
+* Level Up (?)
+* Win Sound
+* Death
+* Monster Death
