@@ -129,9 +129,11 @@ class Gather extends Job {
 }
 
 class Build extends Job {
+    var house:House;
+
     public function new(island:Island, peon:Peon, target:House) {
         super(island, peon);
-        this.target = target;
+        this.target = house = target;
     }
 
     override function isValidTarget(e:Entity):Bool {
@@ -139,7 +141,7 @@ class Build extends Job {
     }
 
     override function arrived() {
-        if ((cast target).build())
+        if (house.build())
             peon.job = null;
     }
 }
