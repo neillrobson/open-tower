@@ -1,0 +1,23 @@
+name: Build and Publish HTML5 Game
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.1.4
+      - name: Install OpenFL
+        run: haxelib install openfl
+      - name: Build HTML5 game
+        run: openfl build -final -clean html5
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./Export/html5/bin
+          publish_branch: gh-pages
