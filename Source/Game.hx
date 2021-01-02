@@ -1,5 +1,8 @@
 package;
 
+import openfl.media.SoundChannel;
+import motion.Actuate;
+import openfl.media.SoundTransform;
 import event.ToolbarEvent;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
@@ -48,6 +51,7 @@ class Game extends Sprite {
     var wonScreen:Bitmap;
     var scoreText:TextField;
     var continueText:TextField;
+    var winSongChannel:SoundChannel;
 
     var selectedHouseType:HouseType;
     var cursor:Tile;
@@ -307,12 +311,22 @@ class Game extends Sprite {
             removeChild(wonScreen);
             removeChild(scoreText);
             removeChild(continueText);
+
+            if (winSongChannel != null)
+                Actuate.transform(winSongChannel, 1.2).sound(0.1, 0);
         }
         return this.won = won;
     }
 
     public function win() {
         scoreText.text = 'Score: ${Math.round(10000 * 60 / gameTime)}';
+
+        var winSong = Assets.getSound('assets/Sounds/Win Song.wav');
+        if (winSong != null) {
+            winSongChannel = winSong.play(0, 0, new SoundTransform(0, 0));
+            Actuate.transform(winSongChannel, 15).sound(1, 0);
+        }
+
         won = true;
     }
 }
