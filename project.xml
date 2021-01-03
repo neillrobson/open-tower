@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 
-    <meta title="OpenTower" package="com.neillrobson.opentower" version="0.1.0" company="Neill Robson" />
+    <meta title="OpenTower" package="com.neillrobson.opentower" version="0.1.1" company="Neill Robson" />
     <app main="Main" path="Export" file="OpenTower" />
 
     <window background="0x000000" fps="60" />
