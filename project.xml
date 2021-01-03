@@ -11,6 +11,6 @@
     <haxelib name="openfl" />
     <haxelib name="actuate" />
 
-    <assets path="Assets" rename="assets" />
+    <assets path="Assets" />
 
 </project>

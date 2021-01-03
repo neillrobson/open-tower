@@ -321,7 +321,7 @@ class Game extends Sprite {
     public function win() {
         scoreText.text = 'Score: ${Math.round(10000 * 60 / gameTime)}';
 
-        var winSong = Assets.getSound(AssetPaths.win_song__wav);
+        var winSong = Assets.getSound(AssetPaths.win_song__ogg);
         winSongChannel = winSong.play(0, 0, new SoundTransform(0, 0));
         Actuate.transform(winSongChannel, 15).sound(1, 0);
 

@@ -1,4 +1,4 @@
 package;
 
-@:build(util.AssetLoader.buildFileReferences("assets", true))
+@:build(util.AssetLoader.buildFileReferences("Assets", true))
 class AssetPaths {}
