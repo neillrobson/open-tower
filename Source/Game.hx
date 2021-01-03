@@ -73,7 +73,7 @@ class Game extends Sprite {
         graphics.drawRect(0, 0, WIDTH, HEIGHT);
         graphics.endFill();
 
-        var islandBitmapData = Assets.getBitmapData('assets/island.png');
+        var islandBitmapData = Assets.getBitmapData(AssetPaths.island__png);
         islandBitmap = new Bitmap(islandBitmapData);
         addChild(islandBitmap);
 
@@ -85,16 +85,16 @@ class Game extends Sprite {
         toolbar = new Toolbar(WIDTH, TOOLBAR_HEIGHT, this);
         toolbar.addEventListener(ToolbarEvent.HOUSE_SELECT, onHouseSelect);
 
-        logo = new Bitmap(Assets.getBitmapData('assets/logo.png'));
+        logo = new Bitmap(Assets.getBitmapData(AssetPaths.logo__png));
         logo.x = (WIDTH - logo.bitmapData.width) / 2;
         logo.y = 16;
         addChild(logo);
 
-        wonScreen = new Bitmap(Assets.getBitmapData('assets/winscreen.png'));
+        wonScreen = new Bitmap(Assets.getBitmapData(AssetPaths.winscreen__png));
         wonScreen.x = (WIDTH - wonScreen.bitmapData.width) / 2;
         wonScreen.y = 16;
 
-        var font = Assets.getFont('assets/nokiafc22.ttf');
+        var font = Assets.getFont(AssetPaths.nokiafc22__ttf);
         var textFormat = new TextFormat(font.fontName, 8, 0xFFFFFF, true);
 
         titleText = new TextField();
@@ -321,11 +321,9 @@ class Game extends Sprite {
     public function win() {
         scoreText.text = 'Score: ${Math.round(10000 * 60 / gameTime)}';
 
-        var winSong = Assets.getSound('assets/Sounds/Win Song.wav');
-        if (winSong != null) {
-            winSongChannel = winSong.play(0, 0, new SoundTransform(0, 0));
-            Actuate.transform(winSongChannel, 15).sound(1, 0);
-        }
+        var winSong = Assets.getSound(AssetPaths.win_song__wav);
+        winSongChannel = winSong.play(0, 0, new SoundTransform(0, 0));
+        Actuate.transform(winSongChannel, 15).sound(1, 0);
 
         won = true;
     }

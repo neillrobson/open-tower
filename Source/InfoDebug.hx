@@ -19,7 +19,7 @@ class InfoDebug extends TextField {
         super();
         times = [];
         selectable = false;
-        var font = Assets.getFont('assets/nokiafc22.ttf');
+        var font = Assets.getFont(AssetPaths.nokiafc22__ttf);
         defaultTextFormat = new TextFormat(font.fontName, 15, inCol);
         width = 150 * 4;
         height = 70;
@@ -45,7 +45,14 @@ class InfoDebug extends TextField {
                 times.shift();
             tL = times.length * timer;
 
-            text = "fps " + tL + " el " + Math.round((tL / Lib.current.stage.frameRate) * 10) / 10 + " mem " + mem + "  mx " + memPeak;
+            text = "fps "
+                + tL
+                + " el "
+                + Math.round((tL / Lib.current.stage.frameRate) * 10) / 10
+                + " mem "
+                + mem
+                + "  mx "
+                + memPeak;
         }
         timer += -1;
     }

@@ -170,13 +170,13 @@ class Peon extends Entity {
         switch (type) {
             case PEON:
                 --island.population;
-                Assets.getSound('assets/Sounds/Death.wav').play();
+                Assets.getSound(AssetPaths.death__wav).play();
             case WARRIOR:
                 --island.warriorPopulation;
-                Assets.getSound('assets/Sounds/Death.wav').play();
+                Assets.getSound(AssetPaths.death__wav).play();
             case MONSTER:
                 --island.monsterPopulation;
-                Assets.getSound('assets/Sounds/Monster Death.wav').play();
+                Assets.getSound(AssetPaths.monster_death__wav).play();
         }
     }
 

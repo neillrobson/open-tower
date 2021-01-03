@@ -41,7 +41,7 @@ class Toolbar extends Sprite {
         graphics.drawRect(0, 0, width, height);
         graphics.endFill();
 
-        var font = Assets.getFont('assets/nokiafc22.ttf');
+        var font = Assets.getFont(AssetPaths.nokiafc22__ttf);
         var textFormat = new TextFormat(font.fontName, 8, 0xFFFFFF, true);
 
         timeText = new TextField();
@@ -178,7 +178,7 @@ class Toolbar extends Sprite {
         if (newSelectionXPos == selectedHouseMarker.x)
             return;
         selectedHouseMarker.x = newSelectionXPos;
-        Assets.getSound('assets/Sounds/Select.wav').play();
+        Assets.getSound(AssetPaths.select__wav).play();
 
         if (event.selection >= 0) {
             var type = HouseType.houseTypes[event.selection];

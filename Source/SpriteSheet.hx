@@ -30,7 +30,7 @@ class SpriteSheet {
     // public final soundButtons:Array<Int>;
 
     public function new() {
-        tileset = new Tileset(Assets.getBitmapData('assets/sheet.png'));
+        tileset = new Tileset(Assets.getBitmapData(AssetPaths.sheet__png));
 
         towerTop = tileset.addRect(new Rectangle(0, 0, 32, 16));
         towerMid = tileset.addRect(new Rectangle(0, 16, 32, 8));

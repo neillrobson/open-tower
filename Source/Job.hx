@@ -176,7 +176,7 @@ class GotoAndConvert extends Job {
             island.resources.wood -= Island.WOOD_PER_WARRIOR;
             peon.type = WARRIOR;
             house.puff();
-            Assets.getSound('assets/Sounds/Spawn Warrior.wav').play();
+            Assets.getSound(AssetPaths.spawn_warrior__wav).play();
         }
         peon.job = null;
     }
