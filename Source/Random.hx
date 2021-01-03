@@ -1,6 +1,10 @@
 /**
     Everything in this class comes from HaxeFlixel's FlxRandom.
+    https://github.com/HaxeFlixel/flixel/blob/dev/flixel/math/FlxRandom.hx
 **/
+
+package;
+
 class Random {
     /**
      * The global base random number generator seed (for deterministic behavior in recordings and saves).
