@@ -12,5 +12,5 @@ Link & License: https://github.com/al6x/BreakingTheTower
 **Music**
 
 _Daily Beetle_ by Kevin MacLeod\
-Link: https://incompetech.filmmusic.io/song/3579-daily-beetle\
+Link: https://incompetech.filmmusic.io/song/3579-daily-beetle \
 License: https://filmmusic.io/standard-license
