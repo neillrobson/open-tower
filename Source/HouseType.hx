@@ -27,6 +27,8 @@ class HouseType {
     public final name:String;
     public final acceptResource:Resource;
 
+    public var tileId(get, never):Int;
+
     private function new(spriteIndex:Int, name:String, radius:Int, anchorX:Int, anchorY:Int,
             wood:Int, rock:Int, food:Int, acceptResource:Resource = null) {
         this.spriteIndex = spriteIndex;
@@ -41,8 +43,8 @@ class HouseType {
         houseTypes[id++] = this;
     }
 
-    public function getImage(spriteSheet:SpriteSheet) {
-        return spriteSheet.houses[spriteIndex % 2 + 1][Std.int(spriteIndex / 2)];
+    public function get_tileId() {
+        return Global.spriteSheet.houses[spriteIndex % 2 + 1][Std.int(spriteIndex / 2)];
     }
 
     public function getCostString() {

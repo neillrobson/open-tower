@@ -6,8 +6,6 @@ class Puff {
     public var tile = new Tile();
     public var alive(get, null):Bool;
 
-    final spriteSheet:SpriteSheet;
-
     final lifeTime:Float;
     var life = 0.0;
 
@@ -16,14 +14,12 @@ class Puff {
     var ySpeed = -9.0;
     var yAccel = 0.0;
 
-    public function new(x:Float, y:Float, spriteSheet:SpriteSheet) {
-        this.spriteSheet = spriteSheet;
-
+    public function new(x:Float, y:Float) {
         tile.x = x;
         tile.y = y;
         tile.originX = 4;
         tile.originY = 4;
-        tile.id = spriteSheet.smoke[0];
+        tile.id = Global.spriteSheet.smoke[0];
 
         lifeTime = 3 + Math.random() * 2;
     }
@@ -39,7 +35,7 @@ class Puff {
 
         var age = Std.int(life * 6 / lifeTime);
         if (age <= 4)
-            tile.id = spriteSheet.smoke[age];
+            tile.id = Global.spriteSheet.smoke[age];
         else
             tile.alpha = 0;
     }

@@ -1,25 +1,24 @@
 package;
 
-import openfl.media.SoundChannel;
-import motion.Actuate;
-import openfl.media.SoundTransform;
 import event.ToolbarEvent;
-import openfl.text.TextFormat;
-import openfl.text.TextField;
+import motion.Actuate;
+import openfl.Assets;
+import openfl.display.Bitmap;
+import openfl.display.Sprite;
 import openfl.display.Tile;
 import openfl.display.Tilemap;
 import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
-import openfl.Assets;
-import openfl.display.Bitmap;
-import openfl.display.Sprite;
+import openfl.media.SoundChannel;
+import openfl.media.SoundTransform;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 
 class Game extends Sprite {
     public static final WIDTH = 512;
     public static final HEIGHT = 320;
     public static final TOOLBAR_HEIGHT = 40;
 
-    public var spriteSheet:SpriteSheet;
     public var entityDisplayLayer:Tilemap;
 
     public var coordinateTransform:Matrix = new Matrix();
@@ -77,8 +76,8 @@ class Game extends Sprite {
         islandBitmap = new Bitmap(islandBitmapData);
         addChild(islandBitmap);
 
-        spriteSheet = new SpriteSheet();
-        entityDisplayLayer = new Tilemap(WIDTH, HEIGHT, spriteSheet.tileset, false);
+        Global.spriteSheet = new SpriteSheet();
+        entityDisplayLayer = new Tilemap(WIDTH, HEIGHT, Global.spriteSheet.tileset, false);
         addChild(entityDisplayLayer);
 
         // Don't add to the display list yet, because we're starting on the title screen.
@@ -127,7 +126,7 @@ class Game extends Sprite {
 
         // Don't add cursor yet; we're starting on title screen
         cursor = new Tile();
-        cursor.id = spriteSheet.deleteButton;
+        cursor.id = Global.spriteSheet.deleteButton;
     }
 
     public function update() {
@@ -275,10 +274,10 @@ class Game extends Sprite {
     function onHouseSelect(event:ToolbarEvent) {
         if (event.selection >= 0) {
             selectedHouseType = HouseType.houseTypes[event.selection];
-            cursor.id = selectedHouseType.getImage(spriteSheet);
+            cursor.id = selectedHouseType.tileId;
         } else {
             selectedHouseType = null;
-            cursor.id = spriteSheet.deleteButton;
+            cursor.id = Global.spriteSheet.deleteButton;
         }
     }
 

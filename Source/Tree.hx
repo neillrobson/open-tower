@@ -19,8 +19,6 @@ class Tree extends Entity {
     /** Try to grow a new tree once every seventeen minutes or so **/
     static inline final SPREAD_INTERVAL = 1000 * Main.TICKS_PER_SECOND;
 
-    var spriteIndex = NUM_SPRITES - 1;
-
     var random = new Random();
 
     private var age(default, set):Int;
@@ -53,13 +51,8 @@ class Tree extends Entity {
         }
     }
 
-    override function render() {
-        super.render();
-        sprite.id = spriteSheet.trees[spriteIndex];
-    }
-
     function set_age(age:Int) {
-        spriteIndex = (NUM_SPRITES - 1) - Std.int(age / GROW_SPEED);
+        sprite.id = Global.spriteSheet.trees[(NUM_SPRITES - 1) - Std.int(age / GROW_SPEED)];
         return this.age = age;
     }
 

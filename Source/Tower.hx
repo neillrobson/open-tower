@@ -30,14 +30,14 @@ class Tower extends Entity {
         height = 80;
     }
 
-    override function init(island:Island, spriteSheet:SpriteSheet) {
-        super.init(island, spriteSheet);
+    override function init(island:Island) {
+        super.init(island);
 
-        towerBot.id = spriteSheet.towerBot;
-        towerTopWall.id = spriteSheet.towerMid;
-        towerTop.id = spriteSheet.towerTop;
+        towerBot.id = Global.spriteSheet.towerBot;
+        towerTopWall.id = Global.spriteSheet.towerMid;
+        towerTop.id = Global.spriteSheet.towerTop;
 
-        towerMidSpriteId = spriteSheet.towerMid;
+        towerMidSpriteId = Global.spriteSheet.towerMid;
 
         for (mid in towerMids)
             mid.id = towerMidSpriteId;

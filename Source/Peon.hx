@@ -1,14 +1,14 @@
 package;
 
-import openfl.Assets;
-import Resources.Resource;
-import openfl.display.TileContainer;
 import Job.Hunt;
+import Resources.Resource;
 import event.JobEvent;
+import openfl.Assets;
 import openfl.display.Tile;
+import openfl.display.TileContainer;
 
-using haxe.EnumTools.EnumValueTools;
 using Std;
+using haxe.EnumTools.EnumValueTools;
 
 enum PeonType {
     PEON;
@@ -69,11 +69,11 @@ class Peon extends Entity {
         this.type = type;
     }
 
-    override function init(island:Island, spriteSheet:SpriteSheet) {
-        super.init(island, spriteSheet);
+    override function init(island:Island) {
+        super.init(island);
 
-        health.getTileAt(0).id = spriteSheet.healthBar[1];
-        health.getTileAt(1).id = spriteSheet.healthBar[0];
+        health.getTileAt(0).id = Global.spriteSheet.healthBar[1];
+        health.getTileAt(1).id = Global.spriteSheet.healthBar[0];
 
         switch (type) {
             case PEON:
@@ -157,8 +157,8 @@ class Peon extends Entity {
         var rotStep = mod(Math.round(4 * (rot + island.rot) / (2 * Math.PI)), 4);
         var animStep = animSteps[mod(Math.floor(moveTick / 4), 4)];
 
-        body.id = spriteSheet.peons[typeSpriteIndex][animDirs[rotStep] * 3 + animStep];
-        carried.id = spriteSheet.carriedResources[carriedSpriteIndex];
+        body.id = Global.spriteSheet.peons[typeSpriteIndex][animDirs[rotStep] * 3 + animStep];
+        carried.id = Global.spriteSheet.carriedResources[carriedSpriteIndex];
     }
 
     override function die() {

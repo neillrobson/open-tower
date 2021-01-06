@@ -15,9 +15,9 @@ class Rock extends Entity {
         sprite.originY = 6;
     }
 
-    override function init(island:Island, spriteSheet:SpriteSheet) {
-        super.init(island, spriteSheet);
-        sprite.id = spriteSheet.rocks[Std.int(Math.random() * 4)];
+    override function init(island:Island) {
+        super.init(island);
+        sprite.id = Global.spriteSheet.rocks[Std.int(Math.random() * 4)];
     }
 
     override function gatherResource(r:Resource):Bool {

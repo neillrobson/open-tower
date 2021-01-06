@@ -1,9 +1,9 @@
 package;
 
-import openfl.display.TileContainer;
 import Resources.Resource;
-import openfl.geom.Point;
+import openfl.display.TileContainer;
 import openfl.geom.Matrix;
+import openfl.geom.Point;
 
 typedef TargetFilter = Entity->Bool;
 
@@ -12,7 +12,6 @@ class Entity {
     public var y:Float;
     public var r:Float;
 
-    var spriteSheet:SpriteSheet;
     var island:Island;
 
     public var sprite = new TileContainer();
@@ -31,9 +30,8 @@ class Entity {
         sprite.y = newPoint.y;
     }
 
-    public function init(island:Island, spriteSheet:SpriteSheet) {
+    public function init(island:Island) {
         this.island = island;
-        this.spriteSheet = spriteSheet;
     }
 
     public function update() {}

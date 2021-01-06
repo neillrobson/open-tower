@@ -12,8 +12,6 @@ class FarmPlot extends Entity {
     var stamina:Int;
     var age(default, set):Int;
 
-    var spriteIndex:Int;
-
     override public function new(x:Float, y:Float, age:Int) {
         super(x, y, 0); // We can "walk through" farm plots
 
@@ -32,13 +30,9 @@ class FarmPlot extends Entity {
         }
     }
 
-    override function render() {
-        super.render();
-        sprite.id = spriteSheet.farmPlots[spriteIndex];
-    }
-
     function set_age(age:Int) {
-        spriteIndex = NUM_SPRITES - 1 - Std.int(age / GROW_SPEED);
+        sprite.id = Global.spriteSheet.farmPlots[NUM_SPRITES - 1 - Std.int(age / GROW_SPEED)];
+
         return this.age = age;
     }
 

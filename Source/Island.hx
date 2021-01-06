@@ -1,10 +1,10 @@
 package;
 
-import openfl.Assets;
-import openfl.events.MouseEvent;
 import Entity.TargetFilter;
-import openfl.geom.Point;
+import openfl.Assets;
 import openfl.display.BitmapData;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
 
 /**
     The island coordinates run from -128 to 127 in the X and Y directions. The
@@ -146,7 +146,7 @@ class Island {
 
     public function addEntity(e:Entity) {
         game.entityDisplayLayer.addTile(e.sprite);
-        e.init(this, game.spriteSheet);
+        e.init(this);
         entities.push(e);
     }
 

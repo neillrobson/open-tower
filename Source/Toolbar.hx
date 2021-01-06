@@ -2,12 +2,12 @@ package;
 
 import event.ToolbarEvent;
 import openfl.Assets;
-import openfl.display.Shape;
-import openfl.events.MouseEvent;
 import openfl.display.Bitmap;
-import openfl.text.TextFormat;
-import openfl.text.TextField;
+import openfl.display.Shape;
 import openfl.display.Sprite;
+import openfl.events.MouseEvent;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 
 class Toolbar extends Sprite {
     static inline final MARGIN = 2;
@@ -91,8 +91,6 @@ class Toolbar extends Sprite {
         foodText.y = MARGIN + 2 * LINE_HEIGHT;
         addChild(foodText);
 
-        var spriteSheet = game.spriteSheet;
-
         for (i in -1...HouseType.houseTypes.length) {
             var x = getHouseXCoord(i);
 
@@ -108,9 +106,9 @@ class Toolbar extends Sprite {
 
             var img;
             if (i == -1) {
-                img = new Bitmap(spriteSheet.getBitmapData(spriteSheet.deleteButton));
+                img = new Bitmap(Global.spriteSheet.getBitmapData(Global.spriteSheet.deleteButton));
             } else {
-                img = new Bitmap(spriteSheet.getBitmapData(HouseType.houseTypes[i].getImage(spriteSheet)));
+                img = new Bitmap(Global.spriteSheet.getBitmapData(HouseType.houseTypes[i].tileId));
             }
             img.x = img.y = HOUSE_BUTTON_PADDING;
             houseButton.addChild(img);

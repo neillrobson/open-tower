@@ -1,14 +1,14 @@
 package;
 
-import openfl.Assets;
+import Job.Build;
+import Job.Gather;
+import Job.Goto;
 import Job.GotoAndConvert;
 import Job.Plant;
+import Resources.Resource;
+import openfl.Assets;
 import openfl.display.Tile;
 import openfl.display.TileContainer;
-import Job.Goto;
-import Job.Build;
-import Resources.Resource;
-import Job.Gather;
 
 using Std;
 
@@ -50,12 +50,12 @@ class House extends Entity {
         health.addTile(new Tile(0, 0, 0, HEALTH_BAR_WIDTH));
     }
 
-    override function init(island:Island, spriteSheet:SpriteSheet) {
-        super.init(island, spriteSheet);
+    override function init(island:Island) {
+        super.init(island);
 
-        houseSprite.id = spriteSheet.houses[0][0];
-        health.getTileAt(0).id = spriteSheet.healthBar[1];
-        health.getTileAt(1).id = spriteSheet.healthBar[0];
+        houseSprite.id = Global.spriteSheet.houses[0][0];
+        health.getTileAt(0).id = Global.spriteSheet.healthBar[1];
+        health.getTileAt(1).id = Global.spriteSheet.healthBar[0];
     }
 
     public function build():Bool {
@@ -179,9 +179,9 @@ class House extends Entity {
     function set_buildTime(buildTime:Int):Int {
         this.buildTime = buildTime;
         if (isBuilt) {
-            houseSprite.id = type.getImage(spriteSheet);
+            houseSprite.id = type.tileId;
         } else {
-            houseSprite.id = spriteSheet.houses[0][Math.floor(buildTime * BUILD_ANIMATION_STEPS / BUILD_DURATION)];
+            houseSprite.id = Global.spriteSheet.houses[0][Math.floor(buildTime * BUILD_ANIMATION_STEPS / BUILD_DURATION)];
         }
         return buildTime;
     }
@@ -213,7 +213,7 @@ class House extends Entity {
     }
 
     public function puff() {
-        var p = new Puff(11, 3, spriteSheet);
+        var p = new Puff(11, 3);
         puffs.push(p);
         sprite.addTile(p.tile);
     }
