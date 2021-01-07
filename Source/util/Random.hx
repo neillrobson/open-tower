@@ -3,7 +3,7 @@
     https://github.com/HaxeFlixel/flixel/blob/dev/flixel/math/FlxRandom.hx
 **/
 
-package;
+package util;
 
 class Random {
     /**

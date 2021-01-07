@@ -5,6 +5,7 @@ import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
+import util.Random;
 
 /**
     The island coordinates run from -128 to 127 in the X and Y directions. The

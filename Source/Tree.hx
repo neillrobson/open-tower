@@ -1,6 +1,7 @@
 package;
 
 import Resources.Resource;
+import util.Random;
 
 class Tree extends Entity {
     /** About eleven seconds per "sprite change" growth **/
